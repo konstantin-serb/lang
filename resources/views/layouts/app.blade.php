@@ -34,6 +34,12 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
 
+                        @auth
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('language.index') }}">Языки</a>
+                        </li>
+                        @endauth
+
                     </ul>
 
                     <!-- Right Side Of Navbar -->
