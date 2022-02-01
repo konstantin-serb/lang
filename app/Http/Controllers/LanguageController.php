@@ -2,45 +2,44 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LanguageRequest;
+use App\Models\Language;
+use App\Models\Section;
 use Illuminate\Http\Request;
 
 class LanguageController extends Controller
 {
     public function index()
     {
-        dd(__METHOD__);
+        $languages = Language::getAll();
+
+        return view('language.index', compact('languages'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create()
     {
-        dd(__METHOD__);
+        return view('language.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+
+    public function store(LanguageRequest $request)
     {
-        dd(__METHOD__);
+        $language = new Language($request->all());
+        $language->user_id = auth()->id();
+        if($language->save()) {
+            return redirect()->route('language.index');
+        }
+
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function show($id)
     {
-        dd(__METHOD__);
+        $language = Language::getOne($id);
+        $sections = Section::getAllRoot($id);
+
+        return view('language.view', compact('language', 'sections'));
     }
 
     /**
