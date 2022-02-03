@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Language;
+use App\Models\Section;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -24,5 +25,11 @@ class DatabaseSeeder extends Seeder
         //languages
         Language::create(['user_id' => 2, 'title' => 'Английский язык']);
         Language::create(['user_id' => 2, 'title' => 'Грузинский язык']);
+
+        Section::create(['user_id' => 2, 'language' => 1, 'parent_id' => null, 'title' => 'Фразы', ]);
+        Section::create(['user_id' => 2, 'language' => 1, 'parent_id' => 1, 'title' => 'Времена', ]);
+        Section::create(['user_id' => 2, 'language' => 1, 'parent_id' => 2, 'title' => 'Past simple', ]);
+        Section::create(['user_id' => 2, 'language' => 1, 'parent_id' => 2, 'title' => 'Present simple', ]);
+        Section::create(['user_id' => 2, 'language' => 1, 'parent_id' => 2, 'title' => 'Future simple', ]);
     }
 }

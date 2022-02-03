@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSectionsTable extends Migration
+class CreatePhrases3Table extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,17 @@ class CreateSectionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('sections', function (Blueprint $table) {
+        Schema::create('phrases3', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('language_id')->constrained()->cascadeOnDelete();
-            $table->unsignedBigInteger('parent_id')->nullable();
-            $table->foreign('parent_id')->references('id')->on('sections')->onDelete('restrict');
-            $table->string('title', 100);
-            $table->text('description')->nullable();
-            $table->integer('status')->nullable();
+            $table->foreignId('section_id')->constrained()->cascadeOnDelete();
+            $table->string('phrase', 256);
+            $table->string('translate', 256);
+            $table->string('transcription', 256)->nullable();
+            $table->integer('status');
+            $table->integer('count')->default(0);
+            $table->integer('complexity')->default(2);
+
             $table->softDeletes();
             $table->timestamps();
         });
@@ -34,6 +36,6 @@ class CreateSectionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sections');
+        Schema::dropIfExists('phrases3');
     }
 }

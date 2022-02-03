@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\SectionAddRequest;
 use App\Http\Requests\SectionEditRequest;
 use App\Models\Language;
+use App\Models\phrases\Phrase;
 use App\Models\Section;
 use Illuminate\Http\Request;
 
@@ -43,7 +44,9 @@ class SectionController extends Controller
     public function show($id)
     {
         $section = Section::getOne($id);
-        return view('section.view', compact('section'));
+        $phrases = Phrase::getPhrasesForSection($section->id, 'asc');
+        $phrased = $phrases->sortBy('id');
+        return view('section.view', compact('section', 'phrases'));
     }
 
 

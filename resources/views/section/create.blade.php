@@ -28,6 +28,16 @@
                             @enderror
                         </div>
 
+                        <div class="mt-3">
+                            <label class="mb-2">Комментарий, описание</label>
+                            <textarea class="form-control @error('description') is-invalid @enderror" name="description">
+                                {{ old('description') }}
+                            </textarea>
+                            @error('description')
+                            <span class="invalid-feedback"><strong>{{ $message }}</strong></span>
+                            @enderror
+                        </div>
+
                         <div class="btn-group mt-4">
                             <button type="submit" class="btn btn-outline-primary">Добавить</button>
                             <a class="btn btn-outline-danger"

@@ -26,7 +26,8 @@ class SectionAddRequest extends FormRequest
         return [
             'title' => 'required|min:2|max:100',
             'language_id' => 'required|integer',
-            'parent_id' => 'required|integer'
+            'parent_id' => 'required|integer',
+            'description' => 'nullable|max:400'
         ];
     }
 

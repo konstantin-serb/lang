@@ -14,6 +14,7 @@
         <hr>
 
         <h2 class="b">{{ $title }}</h2>
+        <p>{{ $section->description }}</p>
 
         <div class="mt-3 btn-group">
             <a href="{{ route('section.create.sec', ['section' => $section->id, 'language' => $section->language->id]) }}" class="btn btn-outline-secondary">
@@ -34,9 +35,48 @@
             </div>
         @endif
 
-        <div class="row">
+        <hr>
+
+        <div class="btn-group">
+            <a href="{{ route('phrase.create.phrase', ['section' => $section->id]) }}" class="btn btn-success">Добавить фразу</a>
+            <!-- Example split danger button -->
+            <div class="btn-group">
+                <button type="button" class="btn btn-warning">Учить!</button>
+                <button type="button" class="btn btn-warning dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                    <span class="visually-hidden">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">Стандартный</a></li>
+                    <li><a class="dropdown-item" href="#">Усиленный</a></li>
+                    <li><a class="dropdown-item" href="#">Сложные фразы</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="https://i-des.net">Сайт крутого программиста</a></li>
+                </ul>
+            </div>
 
         </div>
+        <br><br>
+        @if(!$phrases->isEmpty())
+            <?php $num = 1?>
+            @foreach($phrases as $phrase)
+                <div class="h5">
+                    <div class="row">
+                        <div class="col-lg-1">
+                            {{ $num }}
+                        </div>
+                        <div class="col-lg-5">
+                            <span title="{{ $phrase->transcription }}">{{ $phrase->phrase }}</span>
+                        </div>
+                        <div class="col-lg-5">
+                            {{ $phrase->translate }}
+                        </div>
+                    </div>
+                    <hr style="margin-top: 0.1em;, margin-bottom: 0.1em; !important;">
+                </div>
+                <?php $num++?>
+            @endforeach
+
+        @endif
 
 
     </div>
