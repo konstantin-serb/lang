@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PhraseAddRequest;
+use App\Http\Requests\PhraseUpdateRequest;
 use App\Models\phrases\Phrase;
 use App\Models\Section;
 use Illuminate\Http\Request;
@@ -41,48 +42,59 @@ class PhraseController extends Controller
 
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function show($id)
     {
         dd(__METHOD__);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function edit($id)
     {
-        dd(__METHOD__);
+        $phrase = Phrase::getOne($id);
+        return view('phrases.edit', compact('phrase'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+
+    public function update(PhraseUpdateRequest $request, $id)
     {
-        dd(__METHOD__);
+        $phrase = Phrase::getOne($id);
+        $phrase->fill($request->all());
+        $phrase->save();
+        return redirect()->route('phrase.create.phrase', ['section' => $phrase->section_id]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
+    public function delete($id)
+    {
+        $phrase = Phrase::getOne($id);
+        return view('phrases.delete', compact('phrase'));
+    }
+
+
     public function destroy($id)
     {
-        dd(__METHOD__);
+        $phrase = Phrase::getOne($id);
+        $phrase->delete();
+        return redirect()->route('phrase.create.phrase', ['section' => $phrase->section_id]);
+    }
+
+
+    public function deleteAll($section_id)
+    {
+        $section = Section::getOne($section_id);
+
+        return view('phrases.deleteAll', compact('section'));
+    }
+
+
+    public function destroyAll($section_id)
+    {
+        $phrases = Phrase::getPhrasesForSection($section_id);
+        foreach($phrases as $phrase)
+        {
+            $phrase->delete();
+        }
+        return redirect()->route('phrase.create.phrase', ['section' => $section_id]);
     }
 }

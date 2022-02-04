@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\PhraseController;
+use App\Http\Controllers\LearnController;
 
 
 
@@ -24,6 +25,13 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('phrase', PhraseController::class);
     Route::get('/phrase/{section}/create', [PhraseController::class, 'createPhrase'])->name('phrase.create.phrase');
+    Route::get('/phrase/{phrase}/delete', [PhraseController::class, 'delete'])->name('phrase.delete');
+    Route::get('/phrase/{section}/deleteAll', [PhraseController::class, 'deleteAll'])->name('phrase.deleteAll');
+    Route::delete('/phrase/{section}/destroyAll', [PhraseController::class, 'destroyAll'])->name('phrase.destroyAll');
+
+    Route::get('/learn/{section}/{cycles?}/{complexity?}', [LearnController::class, 'learn'])->name('learn');
+    Route::post('/learn/check', [LearnController::class, 'checkPhraseAjax']);
+    Route::post('/learn/changeComplexity', [LearnController::class, 'changeComplexity']);
 });
 
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

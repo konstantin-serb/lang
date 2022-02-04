@@ -6,6 +6,12 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ route('language.index') }}">Языки</a></li>
                 <li class="breadcrumb-item"><a href="{{ route('language.show', ['language' => $language->id]) }}">{{ $language->title }}</a></li>
+                <?= $currentSection->getBreadcrumb($currentSection->id)?>
+                <li class="breadcrumb-item active" aria-current="page">
+                    <a href="{{ route('section.show', ['section' => $currentSection->id]) }}">
+                        {{ $currentSection->title }}
+                    </a>
+                </li>
                 <li class="breadcrumb-item active" aria-current="page">{{$title}}</li>
             </ol>
         </nav>

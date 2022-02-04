@@ -7,8 +7,10 @@
             aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ route('language.index') }}">Языки</a></li>
-                {{--                <li class="breadcrumb-item"><a href="{{ route('language.show', ['language' => $language->id]) }}">{{ $language->title }}</a></li>--}}
-                {{--                <li class="breadcrumb-item active" aria-current="page">{{$title}}</li>--}}
+                <li class="breadcrumb-item"><a href="{{ route('language.show', ['language' => $section->language->id]) }}">{{ $section->language->title }}</a></li>
+                <?= $section->getBreadcrumb($section->id)?>
+                <li class="breadcrumb-item active" aria-current="page"><a href="{{ route('section.show', ['section' => $section->id]) }}">{{$section->title}}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{$title}}</li>
             </ol>
         </nav>
         <hr>
@@ -62,16 +64,22 @@
 
 
                 <div class="btn-group">
-                    <button type="submit" class="btn btn-outline-primary">Добавить</button>
-                    <a class="btn btn-outline-danger"
-
-                       href="{{ route('section.show', ['section' => $section->id]) }}"
-                    >Отмена</a>
+                    <button type="submit" class="btn btn-primary">Добавить</button>
+                    <a class="btn btn-secondary" href="{{ route('section.show', ['section' => $section->id]) }}">
+                        Вернуться назад
+                    </a>
                 </div>
+                <a class="btn btn-danger" href="{{ route('phrase.deleteAll', ['section' => $section->id]) }}">
+                    Удалить все фразы
+                </a>
             </form>
 
         </div>
         <hr class="mt-4">
+        @if($section->desctiption)
+        <?=$section->description?>
+        <hr>
+        @endif
         @if(!$phrases->isEmpty())
             <?php $num = count($phrases)?>
             @foreach($phrases as $phrase)
@@ -80,10 +88,13 @@
                         <div class="col-lg-1">
                             {{ $num }}
                         </div>
-                        <div class="col-lg-5">
-                            <span title="{{ $phrase->transcription }}">{{ $phrase->phrase }}</span>
+                        <div class="col-lg-4">
+                            <span title="{{ $phrase->transcription }}">
+                                <a class="myLink" href="{{ route('phrase.edit', ['phrase' => $phrase->id]) }}">
+                                    {{ $phrase->phrase }}
+                                </a></span>
                         </div>
-                        <div class="col-lg-5">
+                        <div class="col-lg-4">
                             {{ $phrase->translate }}
                         </div>
                     </div>

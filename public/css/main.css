@@ -9,3 +9,38 @@
 .inp-text {
     font-size: 1.2em;
 }
+
+.my-input:active, .my-input:hover, .my-input:focus {
+    outline: 0;
+    outline-offset: 0;
+}
+
+.my-input {
+    padding-bottom: 0.3em;
+    background-color: var(--bs-body-bg);
+}
+
+.clo{
+    color: rgba(13, 217, 255, 0.36);
+}
+
+.myLink {
+    text-decoration: none;
+    color:black;
+}
+
+.false {
+    color: red;
+}
+
+.true {
+    color: green;
+}
+
+footer {
+    background-color: #e3e3e3;
+}
+
+#app {
+    min-height: 55vh;
+}

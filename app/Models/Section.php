@@ -72,8 +72,8 @@ class Section extends Model
         $text = '';
         foreach($this->getParentIds($section->id) as $id)
         {
-            $section = $this->where('id', $id)->first();
-            $text .= '<li class="breadcrumb-item"><a href="'.route('section.show', ['section' => $section->id]).'">'.$section->title.'</a></li> ';
+            $sect = $this->where('id', $id)->first();
+            $text .= '<li class="breadcrumb-item"><a href="'.route('section.show', ['section' => $sect->id]).'">'.$sect->title.'</a></li> ';
         }
 
         return $text;
@@ -122,6 +122,31 @@ class Section extends Model
         return array_reverse($arr);
 
     }
+
+
+
+
+
+    public function sectionIds($section, $ids=[])
+    {
+        global $ids;
+        if(!$section->sections->isEmpty()) {
+            foreach ($section->sections as $item) {
+                $ids[] += $item->id;
+                if(!$item->sections->isEmpty()) {
+                    $this->sectionIds($item, $ids);
+                }
+            }
+        } else {
+            $ids = [];
+        }
+        return $ids;
+    }
+
+
+
+
+
 
 }
 

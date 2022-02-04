@@ -20,8 +20,9 @@ class SectionController extends Controller
 
     public function createSection($section, Language $language)
     {
+        $currentSection = Section::getOne($section);
         $parent_id = $section;
-        return view('section.create', compact('language', 'parent_id'));
+        return view('section.create', compact('language', 'parent_id', 'currentSection'));
     }
 
 
@@ -44,7 +45,7 @@ class SectionController extends Controller
     public function show($id)
     {
         $section = Section::getOne($id);
-        $phrases = Phrase::getPhrasesForSection($section->id, 'asc');
+        $phrases = Phrase::getPhrasesForSectionSingle($section->id, 'asc');
         $phrased = $phrases->sortBy('id');
         return view('section.view', compact('section', 'phrases'));
     }
