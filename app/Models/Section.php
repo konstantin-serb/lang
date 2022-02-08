@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\phrases\Phrase;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -141,6 +142,20 @@ class Section extends Model
             $ids = [];
         }
         return $ids;
+    }
+
+
+    public function countPhrases()
+    {
+        $model = Phrase::getModel();
+        $section_id = $this->sectionIds($this);
+
+        if($section_id) {
+            return $model::whereIn('section_id', $section_id)->get()->count();
+        } else {
+            return $model::where('section_id', $this->id)->get()->count();
+        }
+
     }
 
 

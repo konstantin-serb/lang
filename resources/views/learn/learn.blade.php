@@ -38,7 +38,7 @@
                     <div class="row mt-2" style="border-bottom:gray dashed 1px">
 
                         <div class="col-lg-4" >
-                            @if($compl)<a class="myLink" target="_blank" href="{{ route('phrase.edit', ['phrase' => $value->id]) }}">@endif{{ $key + 1 }}
+                            @if($compl)<a class="myLink" target="_blank" tabindex="-1" href="{{ route('phrase.edit', ['phrase' => $value->id]) }}">@endif{{ $key + 1 }}
                             @if($compl)</a>@endif.  <span style="vertical-align: bottom" title="({{ $value->transcription }})">{{ $value->translate }}
                              </span>
                         </div>
@@ -55,13 +55,13 @@
 
                                 @if($compl)
                                 <div class="form-check form-check-inline" style="margin: 0.01em; padding-right: 0.1em; padding-left: 0.7em;">
-                                    <input class="form-check-input" title="легкий" type="radio" data-id="{{ $value->id }}" data-type="1" name="inlineRadioOptions-{{ $value->id }}" id="inlineRadio-1-{{$value->id}}" value="option1" @if($value->complexity == 1) checked @endif>
+                                    <input tabindex="-1" class="form-check-input" title="легкий" type="radio" data-id="{{ $value->id }}" data-type="1" name="inlineRadioOptions-{{ $value->id }}" id="inlineRadio-1-{{$value->id}}" value="option1" @if($value->complexity == 1) checked @endif>
                                 </div>
                                 <div class="form-check form-check-inline" style="margin: 0.01em; padding-right: 0.1em; padding-left: 0.7em;">
-                                    <input class="form-check-input" title="средний" type="radio" data-id="{{ $value->id }}" data-type="2" name="inlineRadioOptions-{{ $value->id }}" id="inlineRadio-2-{{$value->id}}" value="option2" @if($value->complexity == 2) checked @endif>
+                                    <input tabindex="-1" class="form-check-input" title="средний" type="radio" data-id="{{ $value->id }}" data-type="2" name="inlineRadioOptions-{{ $value->id }}" id="inlineRadio-2-{{$value->id}}" value="option2" @if($value->complexity == 2) checked @endif>
                                 </div>
                                 <div class="form-check form-check-inline" style="margin: 0.01em; padding-right: 0.1em; padding-left: 0.7em;">
-                                    <input class="form-check-input" title="сложный" type="radio" data-id="{{ $value->id }}" data-type="3" name="inlineRadioOptions-{{ $value->id }}" id="inlineRadio-3-{{$value->id}}" value="option3" @if($value->complexity == 3) checked @endif>
+                                    <input tabindex="-1" class="form-check-input" title="сложный" type="radio" data-id="{{ $value->id }}" data-type="3" name="inlineRadioOptions-{{ $value->id }}" id="inlineRadio-3-{{$value->id}}" value="option3" @if($value->complexity == 3) checked @endif>
                                 </div>
                                 @endif
 

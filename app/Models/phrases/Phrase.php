@@ -43,6 +43,37 @@ class Phrase extends Model
     }
 
 
+    public static function getPhrases($sections_id, $complexity)
+    {
+        $model = self::getModel();
+        if(is_array($sections_id)) {
+            if($complexity == 1) {
+            return $model::whereIn('section_id', $sections_id)->orderBy('id')->get();
+                } elseif($complexity ==2) {
+                return $model::whereIn('section_id', $sections_id)->where('complexity', '=', 1)->orderBy('id')->get();
+            } elseif($complexity == 3) {
+                return $model::whereIn('section_id', $sections_id)->where('complexity', '=', 2)->orderBy('id')->get();
+            } elseif ($complexity == 4) {
+                return $model::whereIn('section_id', $sections_id)->where('complexity', '=', 3)->orderBy('id')->get();
+            } elseif ($complexity == 5) {
+                return $model::whereIn('section_id', $sections_id)->where('complexity', '>', 1)->orderBy('id')->get();
+            }
+        } else {
+            if($complexity == 1) {
+                return $model::where('section_id', $sections_id)->orderBy('id')->get();
+            } elseif($complexity ==2) {
+                return $model::where('section_id', $sections_id)->where('complexity', '=', 1)->orderBy('id')->get();
+            } elseif($complexity == 3) {
+                return $model::where('section_id', $sections_id)->where('complexity', '=', 2)->orderBy('id')->get();
+            } elseif ($complexity == 4) {
+                return $model::where('section_id', $sections_id)->where('complexity', '=', 3)->orderBy('id')->get();
+            } elseif ($complexity == 5) {
+                return $model::where('section_id', $sections_id)->where('complexity', '>', 1)->orderBy('id')->get();
+            }
+        }
+    }
+
+
     public static function getPhrasesForSection($section_id, $sort = 'desc')
     {
         $section = Section::getOne($section_id);

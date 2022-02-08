@@ -6,6 +6,7 @@ use App\Http\Requests\PhraseAddRequest;
 use App\Http\Requests\PhraseUpdateRequest;
 use App\Models\phrases\Phrase;
 use App\Models\Section;
+use App\Models\Statistics;
 use Illuminate\Http\Request;
 
 class PhraseController extends Controller
@@ -37,6 +38,9 @@ class PhraseController extends Controller
         $model->status = 1;
         if($model->save())
         {
+            $statistics = Statistics::firstOrNew(['user_id' => auth()->id(), 'date' => date('Y-m-d')]);
+            $statistics->created = $statistics->created + 1;
+            $statistics->save();
             return redirect()->route('phrase.create.phrase', ['section' => $request->section_id]);
         }
 

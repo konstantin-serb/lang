@@ -59,6 +59,9 @@
                                 </li>
                             @endif
                         @else
+                            <li class="nav-item" style="padding-bottom: 0.5rem; padding-top: 0.5rem;">
+                                <span >Сегодня добавлено: <span class="b">{{ \App\Models\Statistics::getCreatedToday() }}</span>  &nbsp;&nbsp; Повторено: <span class="b">{{ \App\Models\Statistics::getRepeatedToday() }}</span>&nbsp;&nbsp;</span>
+                            </li>
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }}

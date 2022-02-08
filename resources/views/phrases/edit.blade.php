@@ -48,6 +48,16 @@
                     </div>
 
                     <div class="col-lg-6">
+                        <div class="mt-3">
+                            <label class="mb-2">Сложность</label>
+                            <select class="form-select inp-text "
+                                   name="complexity" autocomplete="off" spellcheck="false">
+                                <option value="1" @if($phrase->complexity == 1) selected @endif>Легкая</option>
+                                <option value="2" @if($phrase->complexity == 2) selected @endif>Средняя</option>
+                                <option value="3" @if($phrase->complexity == 3) selected @endif>Тяжелая</option>
+                            </select>
+
+                        </div>
                     </div>
 
                     <div class="col-lg-6">
@@ -64,7 +74,7 @@
                 </div>
 
 
-                <div class="btn-group">
+                <div class="btn-group mt-3">
                     <button type="submit" class="btn btn-primary">Изменить</button>
 
                     <a class="btn btn-danger" href="{{ route('phrase.delete', ['phrase' => $phrase->id]) }}">

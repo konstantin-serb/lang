@@ -46,8 +46,7 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-6">
-                    </div>
+
 
                     <div class="col-lg-6">
                         <div class="mt-3">
@@ -60,16 +59,31 @@
                             @enderror
                         </div>
                     </div>
+
+                    <div class="col-lg-6">
+                        <div class="mt-3">
+                            <label class="mb-2">Сложность</label>
+                            <select class="form-select inp-text "
+                                    name="complexity" autocomplete="off" spellcheck="false">
+                                <option value="1" >Легкая</option>
+                                <option value="2" selected >Средняя</option>
+                                <option value="3" >Тяжелая</option>
+                            </select>
+
+                        </div>
+                    </div>
+
                 </div>
 
 
-                <div class="btn-group">
+
+                <div class="btn-group mt-3">
                     <button type="submit" class="btn btn-primary">Добавить</button>
                     <a class="btn btn-secondary" href="{{ route('section.show', ['section' => $section->id]) }}">
                         Вернуться назад
                     </a>
                 </div>
-                <a class="btn btn-danger" href="{{ route('phrase.deleteAll', ['section' => $section->id]) }}">
+                <a class="btn btn-danger mt-3" href="{{ route('phrase.deleteAll', ['section' => $section->id]) }}">
                     Удалить все фразы
                 </a>
             </form>
