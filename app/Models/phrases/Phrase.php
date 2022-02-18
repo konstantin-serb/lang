@@ -73,6 +73,13 @@ class Phrase extends Model
         }
     }
 
+    public static function getNullable()
+    {
+        $model = self::getModel();
+        return $model::where('user_id', auth()->id())
+        ->where('count', '=', 0)->orderBy('id')->get();
+    }
+
 
     public static function getPhrasesForSection($section_id, $sort = 'desc')
     {

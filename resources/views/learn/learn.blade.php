@@ -38,8 +38,8 @@
                     <div class="row mt-2" style="border-bottom:gray dashed 1px">
 
                         <div class="col-lg-4" >
-                            @if($compl)<a class="myLink" target="_blank" tabindex="-1" href="{{ route('phrase.edit', ['phrase' => $value->id]) }}">@endif{{ $key + 1 }}
-                            @if($compl)</a>@endif.  <span style="vertical-align: bottom" title="({{ $value->transcription }})">{{ $value->translate }}
+                            <a class="myLink" target="_blank" tabindex="-1" href="{{ route('phrase.edit', ['phrase' => $value->id]) }}">{{ $key + 1 }}
+                            </a> .  <span style="vertical-align: bottom" title="({{ $value->transcription }})">{{ $value->translate }}
                              </span>
                         </div>
                         <div class="col-lg-4">

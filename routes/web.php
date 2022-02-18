@@ -29,10 +29,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/phrase/{section}/deleteAll', [PhraseController::class, 'deleteAll'])->name('phrase.deleteAll');
     Route::delete('/phrase/{section}/destroyAll', [PhraseController::class, 'destroyAll'])->name('phrase.destroyAll');
 
+    Route::get('/learn/nullable/{section}', [LearnController::class, 'getNullable'])->name('learn.nullable');
     Route::get('/learn/{string}/{sections?}', [LearnController::class, 'learn'])->name('learn');
     Route::post('/learn/check', [LearnController::class, 'checkPhraseAjax']);
     Route::post('/learn/changeComplexity', [LearnController::class, 'changeComplexity']);
     Route::post('/learn/commutator', [LearnController::class, 'learnCommutator'])->name('learn.commutator');
+
 });
 
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

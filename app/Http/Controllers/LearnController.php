@@ -53,6 +53,35 @@ class LearnController extends Controller
     }
 
 
+    public function getNullable($section_id)
+    {
+        $section = Section::getOne($section_id);
+        $language_id = $section->language_id;
+
+        $limit = 200;
+        $cycles = 1;
+        $compl = true;
+        $phrases = Phrase::getNullable();
+
+        $arrayAll = [];
+        $num = 0;
+        for ($i = 0; $i < $cycles; $i++) {
+
+            $collection = $phrases->shuffle();
+
+            foreach ($collection as $coll) {
+                if ($coll->section->language_id == $language_id) {
+                    $arrayAll[$num] = $coll;
+                    $num++;
+                }
+            }
+        }
+
+        $array = array_slice($arrayAll, 0, $limit);
+        return view('learn.learn', compact('section', 'array', 'compl'));
+    }
+
+
     public function learnCommutator(LearnCommutatorRequest $request)
     {
         if (isset($request->sections)) {

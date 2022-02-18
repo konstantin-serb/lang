@@ -31,13 +31,14 @@
         <div class="">
             <div class="btn-group mt-3" style="margin-right: 1em;">
                 <a href="{{ route('section.create.sec', ['section' => $section->id, 'language' => $section->language->id]) }}"
-                   class="btn btn-outline-secondary">
+                   class="btn btn-outline-secondary" autofocus>
                     Добавить раздел</a>
                 <a class="btn btn-outline-success" href="{{ route('section.edit', ['section' => $section->id]) }}">Редактировать</a>
             </div>
-
+            @if($section->sections->isEmpty())
             <a href="{{ route('phrase.create.phrase', ['section' => $section->id]) }}" class="btn btn-success mt-3">Добавить
                 / редактировать фразы</a>
+            @endif
         </div>
 
         @if(!$section->sections->isEmpty())
@@ -51,7 +52,9 @@
                     ?>
                     @foreach($sections as $item)
                         <a href="{{ route('section.show', ['section' => $item->id]) }}"
-                           class="h5 b no-effect">{{ $item->title }} </a> ({{ $item->countPhrases() }})<br>
+                           class="h5 b no-effect">{{ $item->title }} </a>
+                            ({{ $item->countPhrases() }})
+                            <br>
 
                     @endforeach
                 </div>
@@ -59,40 +62,7 @@
         @endif
 
         <hr>
-        {{--            <div class="btn-group">--}}
-        {{--                <a href="{{ route('phrase.create.phrase', ['section' => $section->id]) }}" class="btn btn-success">Добавить/редак.--}}
-        {{--                    фразы</a>--}}
 
-        {{--                <div class="btn-group">--}}
-        {{--                    <button type="button" class="btn btn-warning">Учить!</button>--}}
-        {{--                    <button type="button" class="btn btn-warning dropdown-toggle dropdown-toggle-split"--}}
-        {{--                            data-bs-toggle="dropdown" aria-expanded="false">--}}
-        {{--                        <span class="visually-hidden">Toggle Dropdown</span>--}}
-        {{--                    </button>--}}
-        {{--                    <ul class="dropdown-menu">--}}
-        {{--                        <li><a class="dropdown-item"--}}
-        {{--                               href="{{ route('learn', ['section' => $section->id]) }}">Простой</a></li>--}}
-        {{--                        <li><a class="dropdown-item"--}}
-        {{--                               href="{{ route('learn', ['section' => $section->id, 'cycles' => 2]) }}">Стандартный</a>--}}
-        {{--                        </li>--}}
-        {{--                        <li><a class="dropdown-item"--}}
-        {{--                               href="{{ route('learn', ['section' => $section->id, 'cycles' => 3]) }}">Усиленный</a>--}}
-        {{--                        </li>--}}
-        {{--                        <li><a class="dropdown-item"--}}
-        {{--                               href="{{ route('learn', ['section' => $section->id, 'cycles' => 3, 'complexity' => 2]) }}">Средний-трудный--}}
-        {{--                                (2)</a></li>--}}
-        {{--                        <li><a class="dropdown-item"--}}
-        {{--                               href="{{ route('learn', ['section' => $section->id, 'cycles' => 3, 'complexity' => 3]) }}">Трудный--}}
-        {{--                                (3)</a></li>--}}
-        {{--                        --}}{{--                    <li><a class="dropdown-item" href="#">Сложные фразы</a></li>--}}
-        {{--                        <li>--}}
-        {{--                            <hr class="dropdown-divider">--}}
-        {{--                        </li>--}}
-        {{--                        <li><a class="dropdown-item" href="https://i-des.net">Сайт крутого программиста</a></li>--}}
-        {{--                    </ul>--}}
-        {{--                </div>--}}
-
-        {{--            </div>--}}
         <form action="{{ route('learn.commutator') }}" method="post">
             @csrf
             <input type="hidden" name="section" value="{{ $section->id }}">
@@ -158,8 +128,9 @@
                     </div>
                 </div>
 
-                <div class="col-lg-2" style="margin-top:2.2em;">
+                <div class="col-lg-2 " style="margin-top:2.2em;">
                     <button type="submit" class="btn btn-warning ">&nbsp;Учить!&nbsp;</button>
+                    <a href="{{ route('learn.nullable', ['section' => $section->id]) }}" class="btn btn-secondary">1 раз</a>
                 </div>
 
             </div>

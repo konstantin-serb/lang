@@ -149,7 +149,6 @@ class Section extends Model
     {
         $model = Phrase::getModel();
         $section_id = $this->sectionIds($this);
-
         if($section_id) {
             return $model::whereIn('section_id', $section_id)->get()->count();
         } else {

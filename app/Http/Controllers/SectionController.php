@@ -54,8 +54,9 @@ class SectionController extends Controller
     public function edit($id)
     {
         $section = Section::getOne($id);
+        $allSections = Section::getAllRoot($section->language_id);
 
-        return view('section.edit', compact('section'));
+        return view('section.edit', compact('section', 'allSections'));
     }
 
 

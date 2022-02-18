@@ -6,12 +6,14 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ route('language.index') }}">Языки</a></li>
                 <li class="breadcrumb-item"><a href="{{ route('language.show', ['language' => $language->id]) }}">{{ $language->title }}</a></li>
+                @if(isset($currentSection))
                 <?= $currentSection->getBreadcrumb($currentSection->id)?>
                 <li class="breadcrumb-item active" aria-current="page">
                     <a href="{{ route('section.show', ['section' => $currentSection->id]) }}">
                         {{ $currentSection->title }}
                     </a>
                 </li>
+                @endif
                 <li class="breadcrumb-item active" aria-current="page">{{$title}}</li>
             </ol>
         </nav>
@@ -28,7 +30,7 @@
                         <input type="hidden" name="parent_id" value="{{ $parent_id }}">
                         <div class="mt-3">
                             <label class="mb-2">Название раздела</label>
-                            <input class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title') }}">
+                            <input class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title') }}" autofocus>
                             @error('title')
                             <span class="invalid-feedback"><strong>{{ $message }}</strong></span>
                             @enderror
