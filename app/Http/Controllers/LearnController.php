@@ -25,6 +25,7 @@ class LearnController extends Controller
         $complexity = $options[2];
         $sort = $options[3];
         $limit = $options[4];
+        $task = $options[5];
 
         $phrases = Phrase::getPhrases($sections_id, $complexity);
 
@@ -49,7 +50,13 @@ class LearnController extends Controller
         }
 
         $array = array_slice($arrayAll, 0, $limit);
-        return view('learn.learn', compact('section', 'array', 'compl'));
+
+        if($task == 1) {
+            return view('learn.learn', compact('section', 'array', 'compl'));
+        } else {
+            return view('learn.read', compact('section', 'array', 'compl'));
+        }
+
     }
 
 
@@ -102,6 +109,7 @@ class LearnController extends Controller
             'complexity' => $request->complexity,
             'sort' => $sort,
             'limit' => $request->limit,
+            'task' => $request->task,
         ];
         $string = implode(',', $options);
 

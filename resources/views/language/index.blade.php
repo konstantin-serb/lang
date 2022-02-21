@@ -12,10 +12,10 @@
             <h3 class="b">Изучаемые языки:</h3>
         </div>
 
-        @foreach($languages as $language)
+        @foreach($languages as $lang)
 
             <div class="">
-                <a class="h5 b no-effect" href="{{ route('language.show', ['language' => $language->id]) }}">{{ $language->title }}</a>
+                <a class="h5 b no-effect" href="{{ route('language.show', ['language' => $lang->id]) }}">{{ $lang->title }}</a>
             </div>
 
             @endforeach

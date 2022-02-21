@@ -25,7 +25,7 @@
             @csrf
         </form>
 
-        <h2 class="b">{{ $title }}</h2>
+        <h2 class="b">{{ $title }} ({{ $section->countPhrases() }})</h2>
         <p><?=$section->description?></p>
 
         <div class="">
@@ -53,7 +53,9 @@
                     @foreach($sections as $item)
                         <a href="{{ route('section.show', ['section' => $item->id]) }}"
                            class="h5 b no-effect">{{ $item->title }} </a>
+                        @if($item->sections->isEmpty())
                             ({{ $item->countPhrases() }})
+                            @endif
                             <br>
 
                     @endforeach
@@ -67,10 +69,10 @@
             @csrf
             <input type="hidden" name="section" value="{{ $section->id }}">
             <div class="row">
-                <div class="col-lg-2">
+                <div class="col-lg-1">
                     <div class="">
-                        <label class="mb-2">Количество циклов</label>
-                        <select class="form-select" name="cycles">
+                        <label class="mb-2">К-во циклов</label>
+                        <select class="form-select" name="cycles" id="countCycles">
                             <option value="1">1</option>
                             <option value="2" selected>2</option>
                             <option value="3">3</option>
@@ -83,7 +85,7 @@
                 <div class="col-lg-2">
                     <div class="">
                         <label class="mb-2">Сложность</label>
-                        <select class="form-select" name="complexity">
+                        <select class="form-select" name="complexity" id="complexity">
                             <option value="1">Все</option>
                             <option value="2">Легкий</option>
                             <option value="3">Средний</option>
@@ -99,10 +101,10 @@
 
                 ?>
                 @if(!$sections->isEmpty())
-                    <div class="col-lg-3">
+                    <div class="col-lg-2">
                         <div class="">
                             <label class="mb-2">Разделы:</label>
-                            <select class="form-select" multiple aria-label="multiple select example" name="sections[]">
+                            <select class="form-select" multiple aria-label="multiple select example" name="sections[]" id="secs">
                                 @foreach($sections as $item)
                                     <option value="{{ $item->id }}">{{ $item->title }}</option>
                                 @endforeach
@@ -123,6 +125,16 @@
 
                 <div class="col-lg-1">
                     <div class="">
+                        <label class="mb-2">Задача</label>
+                        <select class="form-select" name="task">
+                            <option value="1" selected>Учить</option>
+                            <option value="2">Читать</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-lg-1">
+                    <div class="">
                         <label class="mb-2">Лимит</label>
                         <input class="form-control" name="limit" value="200">
                     </div>
@@ -130,7 +142,7 @@
 
                 <div class="col-lg-2 " style="margin-top:2.2em;">
                     <button type="submit" class="btn btn-warning ">&nbsp;Учить!&nbsp;</button>
-                    <a href="{{ route('learn.nullable', ['section' => $section->id]) }}" class="btn btn-secondary">1 раз</a>
+{{--                    <a id="readButton" href="#" class="btn btn-info">Читать!</a>--}}
                 </div>
 
             </div>

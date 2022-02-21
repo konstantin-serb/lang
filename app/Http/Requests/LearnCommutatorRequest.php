@@ -30,6 +30,7 @@ class LearnCommutatorRequest extends FormRequest
             'limit' => 'required|integer',
             'section' => 'required|integer',
             'sort' => 'required|integer',
+            'task' => 'required|integer',
         ];
     }
 }

@@ -1,3 +1,23 @@
+<?php
+
+use App\Models\Dictionary;
+
+
+if(isset($section) || isset($language)) {
+    if(isset($language)) {
+        $language_id = $language->id;
+    } else {
+        if(isset($section)) {
+            $language_id = $section->language_id;
+        }
+    }
+    $countWords = Dictionary::getAllForLanguage($language_id);
+}
+
+//dd(isset($language));
+
+?>
+
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
@@ -19,6 +39,7 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/main.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/media.css') }}" rel="stylesheet">
 </head>
 <body>
     <div id="app">
@@ -59,6 +80,13 @@
                                 </li>
                             @endif
                         @else
+                            @if(isset($language_id))
+                                <li class="nav-item" style="padding-bottom: 0.5rem; padding-top: 0.5rem;">Словарный запас: <span class="b">
+                                        <a class="link" href="{{ route('dictionary', ['language_id' => $language_id]) }}" target="_blank" >
+                                        {{ $countWords }}
+                                        </a>
+                                    </span> слов</li>&nbsp;&nbsp;&nbsp;
+                            @endif
                             <li class="nav-item" style="padding-bottom: 0.5rem; padding-top: 0.5rem;">
                                 <span >Сегодня добавлено: <span class="b">{{ \App\Models\Statistics::getCreatedToday() }}</span>  &nbsp;&nbsp; Повторено: <span class="b">{{ \App\Models\Statistics::getRepeatedToday() }}</span>&nbsp;&nbsp;</span>
                             </li>

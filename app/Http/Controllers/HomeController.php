@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Dictionary;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -23,6 +24,14 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $dictionary = Dictionary::getAll();
+
+        return view('home', compact('dictionary'));
+    }
+
+
+    public function startPage()
+    {
+        return view('home.start-page');
     }
 }

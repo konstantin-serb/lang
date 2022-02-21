@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PhraseAddRequest;
 use App\Http\Requests\PhraseUpdateRequest;
+use App\Models\Dictionary;
 use App\Models\phrases\Phrase;
 use App\Models\Section;
 use App\Models\Statistics;
@@ -41,6 +42,7 @@ class PhraseController extends Controller
             $statistics = Statistics::firstOrNew(['user_id' => auth()->id(), 'date' => date('Y-m-d')]);
             $statistics->created = $statistics->created + 1;
             $statistics->save();
+            DictionaryController::addPhrase($model->phrase, $request->section_id);
             return redirect()->route('phrase.create.phrase', ['section' => $request->section_id]);
         }
 
@@ -65,6 +67,8 @@ class PhraseController extends Controller
         $phrase = Phrase::getOne($id);
         $phrase->fill($request->all());
         $phrase->save();
+
+        DictionaryController::addPhrase($phrase->phrase, $phrase->section_id);
         return redirect()->route('phrase.create.phrase', ['section' => $phrase->section_id]);
     }
 

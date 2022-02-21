@@ -1,0 +1,14 @@
+@media (max-width: 540px) {
+    .main-button h1 {
+        font-size: 3rem;
+    }
+
+    .main-button h3 {
+        font-size: 1rem
+    }
+
+
+    .main-button {
+        padding: 1em
+    }
+}
