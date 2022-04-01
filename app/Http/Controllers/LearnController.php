@@ -140,6 +140,18 @@ class LearnController extends Controller
     }
 
 
+    public function readPhraseAjax(Request $request)
+    {
+        $phrase = Phrase::getOne($request->id);
+        $phrase->reading++;
+        $phrase->save();
+
+        $statistics = Statistics::firstOrNew(['user_id' => auth()->id(), 'date' => date('Y-m-d')]);
+        $statistics->readed++;
+        $statistics->save();
+    }
+
+
     public function changeComplexity(Request $request)
     {
         $phrase = Phrase::getOne($request->id);

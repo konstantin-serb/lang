@@ -22,6 +22,7 @@ class CreatePhrases1Table extends Migration
             $table->string('transcription', 256)->nullable();
             $table->integer('status');
             $table->integer('count')->default(0);
+            $table->integer('reading')->nullable();
             $table->integer('complexity')->default(2);
 
             $table->softDeletes();

@@ -2,8 +2,8 @@
 @section('title', $title = 'Чтение по разделу')
 @push('bottom')
     <script src="/js/jquery.js"></script>
-    <script src="/js/checkPhrase.js"></script>
-    <script src="/js/changeComplexity.js"></script>
+    <script src="/js/readPhrase.js"></script>
+{{--    <script src="/js/changeComplexity.js"></script>--}}
 @endpush
 @section('content')
     <div class="container">
@@ -37,7 +37,11 @@
                 @foreach($array as $key=>$value)
                     <div class="row mt-2" style="border-bottom:gray dashed 1px">
 
-                        <div class="col-lg-12" >
+                        <div class="col-lg-10" >
+                            <input class="form-check-input readInput" type="radio" id="radioNoLabel1" value="" data-id="{{ $value->id }}"
+                            style="vertical-align: 0.001em; width: 0.8em; height: 0.8em;" >
+{{--                            <input type="checkbox" class=" readCheck" data-id="{{ $value->id }}">--}}
+                            &nbsp;
                             <a class="myLink" target="_blank" tabindex="-1" href="{{ route('phrase.edit', ['phrase' => $value->id]) }}">{{ $key + 1 }}
                             </a> .  <span style="vertical-align: bottom;"
                                           @if($value->transcription)
@@ -45,6 +49,16 @@
                                           @endif
                             >{{ $value->phrase }}
                              </span> &nbsp; &nbsp; <span class="cloRead" style="">{{ $value->translate }}</span> &nbsp;
+                        </div>
+
+                        <div class="col-lg-2">
+                            <span class="countRead">
+                                @if(!$value->reading)
+                                    0
+                                    @else
+                                    {{ $value->reading }}
+                                    @endif
+                            </span>
                         </div>
 
                     </div>

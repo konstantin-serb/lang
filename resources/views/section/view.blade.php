@@ -165,9 +165,9 @@
                             {{ $phrase->translate }}
                         </div>
                         <div class="col-lg-2">
-                            <div style="text-align: right">
+                            <div style="text-align: right" >
                                     <span class=""
-                                          style="vertical-align: 0.15em; margin-right: 1em; color:lightblue">{{ $phrase->count }}</span>
+                                          style="vertical-align: 0.25em; margin-right: 1em; color:lightblue; font-size: 0.85em;" >{{ $phrase->count }} <span style="color: rgba(228,0,0,0.51);">({{$phrase->getCountReading()}})</span></span>
                                 <div class="form-check form-check-inline"
                                      style="margin: 0.01em; padding-right: 0.1em; padding-left: 0.7em;">
                                     <input class="form-check-input" title="легкий" type="radio"

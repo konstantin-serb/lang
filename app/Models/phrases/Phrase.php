@@ -28,6 +28,16 @@ class Phrase extends Model
     }
 
 
+    public function getCountReading()
+    {
+        if($this->reading > 0) {
+            return $this->reading;
+        } else {
+            return 0;
+        }
+    }
+
+
     public static function getPhrasesForSectionSingle($section_id, $sort = 'desc')
     {
         $model = self::getModel();

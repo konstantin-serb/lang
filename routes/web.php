@@ -33,6 +33,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/learn/{string}/{sections?}', [LearnController::class, 'learn'])->name('learn');
     Route::get('/read/{string}/{sections?}', [LearnController::class, 'read'])->name('read');
     Route::post('/learn/check', [LearnController::class, 'checkPhraseAjax']);
+    Route::post('/learn/read', [LearnController::class, 'readPhraseAjax']);
     Route::post('/learn/changeComplexity', [LearnController::class, 'changeComplexity']);
     Route::post('/learn/commutator', [LearnController::class, 'learnCommutator'])->name('learn.commutator');
 

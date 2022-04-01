@@ -88,7 +88,17 @@ if(isset($section) || isset($language)) {
                                     </span> слов</li>&nbsp;&nbsp;&nbsp;
                             @endif
                             <li class="nav-item" style="padding-bottom: 0.5rem; padding-top: 0.5rem;">
-                                <span >Сегодня добавлено: <span class="b">{{ \App\Models\Statistics::getCreatedToday() }}</span>  &nbsp;&nbsp; Повторено: <span class="b">{{ \App\Models\Statistics::getRepeatedToday() }}</span>&nbsp;&nbsp;</span>
+                                @if(\App\Models\Statistics::getCreatedToday() > 0)
+                                <span >Сегодня добавлено: <span class="b">{{ \App\Models\Statistics::getCreatedToday() }}</span>
+                                @endif
+
+                                @if(\App\Models\Statistics::getRepeatedToday() > 0)
+                                    &nbsp;&nbsp; Повторено: <span class="b">{{ \App\Models\Statistics::getRepeatedToday() }}</span>&nbsp;
+                                @endif
+                                @if(\App\Models\Statistics::getReadToday() > 0)
+                                    &nbsp;&nbsp; Прочитано: <span class="b">{{ \App\Models\Statistics::getReadToday() }}</span>&nbsp;
+                                @endif
+                                    &nbsp;</span>
                             </li>
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>

@@ -19,6 +19,7 @@ class CreateStatisticsTable extends Migration
             $table->date('date');
             $table->integer('created')->nullable();
             $table->integer('repeated')->nullable();
+            $table->integer('readed')->nullable();
         });
     }
 

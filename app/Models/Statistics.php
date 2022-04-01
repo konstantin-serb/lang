@@ -39,4 +39,19 @@ class Statistics extends Model
             return 0;
         }
     }
+
+
+    public static function getReadToday()
+    {
+        $statistics  = self::where('user_id', auth()->id())
+            ->where('date', '=', date('Y-m-d'))
+            ->first();
+
+        if(isset($statistics->readed)) {
+            return $statistics->readed;
+        } else {
+            return 0;
+        }
+    }
+
 }

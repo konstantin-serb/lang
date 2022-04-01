@@ -85,6 +85,12 @@ footer {
     color: inherit;
 }
 
+.countRead {
+    float: right;
+    font-size: 0.8em;
+    color: rgba(228,0,0,0.51);
+}
+
 
 
 
