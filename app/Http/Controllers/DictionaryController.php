@@ -6,7 +6,9 @@ use App\Models\Dictionary;
 use App\Models\Language;
 use App\Models\phrases\Phrase;
 use App\Models\Section;
+use App\Models\Statistics;
 use Illuminate\Http\Request;
+use function PHPUnit\Framework\isEmpty;
 
 class DictionaryController extends Controller
 {
@@ -18,7 +20,7 @@ class DictionaryController extends Controller
         $phrases = $model::where('user_id', $user_id)
             ->get();
 
-        foreach($phrases as $phrase) {
+        foreach ($phrases as $phrase) {
             $language_id = $phrase->section->language_id;
             $result = self::addWords($phrase->phrase, $user_id, $language_id);
         }
@@ -41,36 +43,54 @@ class DictionaryController extends Controller
     {
 
         $array = explode(' ', $phrase);
-        foreach($array as $phr) {
+//        dump($array);
+        foreach ($array as $phr) {
             $word = mb_strtolower($phr);
+//            dump($word);
             $lastLitera = mb_substr($word, -1);
-            $firstLitera = $word[0];
-            if($lastLitera == '?' || $lastLitera == ',' || $lastLitera == '.' || $lastLitera == ';' || $lastLitera == '!'
+            $firstLitera = mb_substr($word, 0, 1);
+//            dd($firstLitera);
+            if ($lastLitera == '?' || $lastLitera == ',' || $lastLitera == '.' || $lastLitera == ';' || $lastLitera == '!'
                 || $lastLitera == ':' || $lastLitera == '!' || $lastLitera == '-' || $lastLitera == ')' || $lastLitera == '('
                 || $lastLitera == '/' || $lastLitera == '|') {
                 $word = mb_substr($word, 0, -1);
             }
 
-            if($firstLitera == '(' || $firstLitera == '?' || $firstLitera == ',' || $firstLitera == '.' || $firstLitera == ';' || $firstLitera == '!'
+            if ($firstLitera == '(' || $firstLitera == '?' || $firstLitera == ',' || $firstLitera == '.' || $firstLitera == ';' || $firstLitera == '!'
                 || $firstLitera == ':' || $firstLitera == '!' || $firstLitera == '-' || $firstLitera == ')' || $firstLitera == '/' || $firstLitera == '|') {
                 $word = substr($word, 1);
             }
 
-            $check = Dictionary::where('user_id', '=', $user_id)->
+            if(!empty(trim($word))) {
+                $check = Dictionary::where('user_id', '=', $user_id)->
                 where('language_id', '=', $language_id)->
                 where('word', '=', $word)->first();
-            $dictionary = Dictionary::firstOrNew(['user_id' => $user_id, 'language_id' => $language_id, 'word' => $word]);
-            if(!$check) {
-                $dictionary->status = 1;
-            }
 
-            $dictionary->save();
+                $dictionary = Dictionary::firstOrNew(['user_id' => $user_id, 'language_id' => $language_id, 'word' => $word]);
+                if (!$check) {
+                    $dictionary->status = 1;
+
+                    //добавляем запись в статистику
+                    if(isset($phrase->created_at)) {
+                        $date = date('Y-m-d', strtotime($phrase->created_at));
+                    } else {
+                        $date = date('Y-m-d', time());
+                    }
+
+                    $statistic = Statistics::firstOrNew(['user_id' => $user_id, 'language_id' => $language_id, 'date' => $date]);
+                    $statistic->words++;
+                    $statistic->save();
+                }
+                $dictionary->save();
+            }
         }
         return true;
     }
 
     public function index($language_id)
     {
+//        $string = '  dfvds ';
+//        dd(!empty(trim($string)), $string);
         $wordsToday = Dictionary::getWordsToday($language_id);
         $language = Language::getOne($language_id);
 
@@ -80,7 +100,7 @@ class DictionaryController extends Controller
 
     public function allDictionary($language_id)
     {
-        $dictionary = Dictionary::getAll();
+        $dictionary = Dictionary::getAll($language_id);
         $countWordsCheck = Dictionary::getAllForLanguage($language_id);
         $language = Language::getOne($language_id);
         return view('dictionary.all-dictionary', compact('dictionary', 'language', 'countWordsCheck'));
@@ -90,8 +110,8 @@ class DictionaryController extends Controller
     public function view($word_id)
     {
         $word = Dictionary::getOne($word_id);
-
-        return view('dictionary.view', compact('word'));
+        $language = Language::getOne($word->language_id);
+        return view('dictionary.view', compact('word', 'language'));
     }
 
 
@@ -108,6 +128,9 @@ class DictionaryController extends Controller
         $word = Dictionary::getOne($request->id);
         $language_id = $word->language_id;
         $word->delete();
+
+        Statistics::minusWordsCalculate($word);
+
         return redirect()->route('dictionary', ['language_id' => $language_id]);
     }
 
@@ -115,15 +138,18 @@ class DictionaryController extends Controller
     public function changeStatus(Request $request)
     {
         $word = Dictionary::getOne($request->id);
-        if($word->status == 1) {
+        if ($word->status == 1) {
             $word->status = 0;
-        }
-
-        elseif($word->status == 0) {
+            Statistics::minusWordsCalculate($word);
+        } elseif ($word->status == 0) {
             $word->status = 1;
+            Statistics::plusWordsCalculate($word);
         }
 
         $word->save();
+
+
+
         return $word->status;
     }
 

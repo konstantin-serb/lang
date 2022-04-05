@@ -158,6 +158,23 @@ class Section extends Model
     }
 
 
+    public static function getSections($ids)
+    {
+        $sectionsIds = explode(',', $ids);
+        $revers =array_reverse($sectionsIds);
+        $arraySections = [];
+        foreach($revers as $idTime) {
+            $id = explode('/', $idTime);
+            $time = explode('/', $idTime)[1];
+            $section = self::where('id', $id[0])->first();
+            $section->status = $id[1];
+            array_unshift($arraySections, $section);
+        }
+        $sections = collect($arraySections);
+        return $sections;
+    }
+
+
 
 
 

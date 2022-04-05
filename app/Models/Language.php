@@ -37,6 +37,10 @@ class Language extends Model
         return self::where('user_id', auth()->id())->where('id', '=', $id)->first();
     }
 
+    public static function getDefault()
+    {
+        return self::where('user_id', auth()->id())->orderBy('id')->first();
+    }
 
 
 }

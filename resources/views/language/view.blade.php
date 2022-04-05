@@ -12,6 +12,7 @@
 
         <h2 class="b">{{ $title }}</h2>
 
+
         <div class="mt-4">
             <a href="{{ route('section.create.sec', ['section' => 0, 'language' => $language->id]) }}" class="btn btn-outline-secondary">
                 Добавить раздел</a>

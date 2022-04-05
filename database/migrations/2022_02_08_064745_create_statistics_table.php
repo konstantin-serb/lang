@@ -16,10 +16,12 @@ class CreateStatisticsTable extends Migration
         Schema::create('statistics', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('language_id')->constrained()->cascadeOnDelete();
             $table->date('date');
             $table->integer('created')->nullable();
             $table->integer('repeated')->nullable();
             $table->integer('readed')->nullable();
+            $table->integer('words')->nullable();
         });
     }
 

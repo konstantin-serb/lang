@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PhraseAddRequest;
 use App\Http\Requests\PhraseUpdateRequest;
 use App\Models\Dictionary;
+use App\Models\Options;
 use App\Models\phrases\Phrase;
 use App\Models\Section;
 use App\Models\Statistics;
@@ -12,13 +13,6 @@ use Illuminate\Http\Request;
 
 class PhraseController extends Controller
 {
-
-    public function index()
-    {
-        dd(__METHOD__);
-    }
-
-
     public function createPhrase($section_id)
     {
         $section = Section::getOne($section_id);
@@ -28,18 +22,19 @@ class PhraseController extends Controller
     }
 
 
-
-
-
     public function store(PhraseAddRequest $request)
     {
         $model = Phrase::getModel();
         $model->fill($request->all());
         $model->user_id = auth()->id();
         $model->status = 1;
-        if($model->save())
-        {
-            $statistics = Statistics::firstOrNew(['user_id' => auth()->id(), 'date' => date('Y-m-d')]);
+        $section = Section::where('id', $model->section_id)->first();
+        $model->language_id = $section->language_id;
+        if($model->save()){
+
+            $statistics = Statistics::firstOrNew(['user_id' => auth()->id(),
+                'language_id' => $section->language_id,
+                'date' => date('Y-m-d')]);
             $statistics->created = $statistics->created + 1;
             $statistics->save();
             DictionaryController::addPhrase($model->phrase, $request->section_id);
@@ -49,16 +44,12 @@ class PhraseController extends Controller
     }
 
 
-    public function show($id)
-    {
-        dd(__METHOD__);
-    }
-
 
     public function edit($id)
     {
         $phrase = Phrase::getOne($id);
-        return view('phrases.edit', compact('phrase'));
+        $language_id = $phrase->language_id;
+        return view('phrases.edit', compact('phrase', 'language_id'));
     }
 
 
@@ -83,7 +74,17 @@ class PhraseController extends Controller
     public function destroy($id)
     {
         $phrase = Phrase::getOne($id);
+
+        // Запись в статистику
+        $statistics = Statistics::firstOrNew(['user_id' => auth()->id(),
+            'language_id' => $phrase->language_id,
+            'date' => date('Y-m-d', strtotime($phrase->created_at))]);
+        $statistics->created = $statistics->created - 1;
+        $statistics->save();
+
+        //Удаление фразы
         $phrase->delete();
+
         return redirect()->route('phrase.create.phrase', ['section' => $phrase->section_id]);
     }
 
@@ -101,6 +102,12 @@ class PhraseController extends Controller
         $phrases = Phrase::getPhrasesForSection($section_id);
         foreach($phrases as $phrase)
         {
+            $statistics = Statistics::firstOrNew(['user_id' => auth()->id(),
+                'language_id' => $phrase->language_id,
+                'date' => date('Y-m-d', strtotime($phrase->created_at))]);
+            $statistics->created = $statistics->created - 1;
+            $statistics->save();
+
             $phrase->delete();
         }
         return redirect()->route('phrase.create.phrase', ['section' => $section_id]);

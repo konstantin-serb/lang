@@ -5,9 +5,10 @@
         <h2 class="b">Языки</h2>
 
         <div>
-            <a href="{{ route('language.create') }}" class="btn btn-outline-secondary">Добавить язык</a>
+            <a href="{{ route('language.create') }}" class="btn btn-primary mt-3">Добавить язык</a>
         </div>
 
+        @if(!$languages->isEmpty())
         <div class="mt-4 mb-3">
             <h3 class="b">Изучаемые языки:</h3>
         </div>
@@ -18,6 +19,9 @@
                 <a class="h5 b no-effect" href="{{ route('language.show', ['language' => $lang->id]) }}">{{ $lang->title }}</a>
             </div>
 
-            @endforeach
+        @endforeach
+
+        @endif
+
     </div>
 @endsection

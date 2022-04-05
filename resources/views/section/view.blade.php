@@ -73,8 +73,8 @@
                     <div class="">
                         <label class="mb-2">К-во циклов</label>
                         <select class="form-select" name="cycles" id="countCycles">
-                            <option value="1">1</option>
-                            <option value="2" selected>2</option>
+                            <option value="1" selected>1</option>
+                            <option value="2">2</option>
                             <option value="3">3</option>
                             <option value="4">4</option>
                             <option value="5">5</option>
@@ -84,13 +84,13 @@
 
                 <div class="col-lg-2">
                     <div class="">
-                        <label class="mb-2">Сложность</label>
+                        <label class="mb-2">Уровень сложности</label>
                         <select class="form-select" name="complexity" id="complexity">
                             <option value="1">Все</option>
                             <option value="2">Легкий</option>
                             <option value="3">Средний</option>
-                            <option value="4">Тяжелый</option>
-                            <option value="5">Тяжелый и средний</option>
+                            <option value="4">Сложный</option>
+                            <option value="5">Сложный и средний</option>
                         </select>
                     </div>
                 </div>

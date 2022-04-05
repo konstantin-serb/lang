@@ -6,6 +6,9 @@ use App\Http\Controllers\SectionController;
 use App\Http\Controllers\PhraseController;
 use App\Http\Controllers\LearnController;
 use App\Http\Controllers\DictionaryController;
+use App\Http\Controllers\SearchController;
+use App\Http\Controllers\OptionsCotnroller;
+use App\Http\Controllers\StatisticController;
 
 
 
@@ -34,8 +37,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/read/{string}/{sections?}', [LearnController::class, 'read'])->name('read');
     Route::post('/learn/check', [LearnController::class, 'checkPhraseAjax']);
     Route::post('/learn/read', [LearnController::class, 'readPhraseAjax']);
+    Route::post('/learn/mix', [LearnController::class, 'learningMixPrepare']);
+    Route::post('/learn/search', [LearnController::class, 'searchPhrases'])->name('learn.searchPhrase');
+    Route::get('/learn/mixPhrases/{word}/{conditions}/{ids}', [LearnController::class, 'learnMix'])->name('learn/mixPhrases');
+    Route::get('/learn/mixTrain/{conditions}/{ids}', [LearnController::class, 'learnMixTrain'])->name('learn/mixTrain');
     Route::post('/learn/changeComplexity', [LearnController::class, 'changeComplexity']);
     Route::post('/learn/commutator', [LearnController::class, 'learnCommutator'])->name('learn.commutator');
+    Route::get('/train', [LearnController::class, 'trainIndex'])->name('train.index');
 
     Route::get('/dictionary/enter', [DictionaryController::class, 'enterToDictionary'])->name('dictionary.enter');
     Route::get('/dictionary/{language_id}/all', [DictionaryController::class, 'allDictionary'])->name('dictionary.all');
@@ -45,6 +53,17 @@ Route::middleware('auth')->group(function () {
     Route::delete('/dictionary/delete', [DictionaryController::class, 'destroy'])->name('dictionary.destroy');
     Route::post('/dictionary/check', [DictionaryController::class, 'changeStatus']);
     Route::get('/dictionary/{language_id}', [DictionaryController::class, 'index'])->name('dictionary');
+
+    Route::post('/options/changeDefaultLanguage', [OptionsCotnroller::class, 'changeDefaultLanguage'])->name('options.changeLanguageDefault');
+
+    Route::get('/search/by_word/{language_id}/{word}', [SearchController::class, 'searchByWord'])->name('search.by_word');
+    Route::get('/search/by_word', [SearchController::class, 'searchPhrase'])->name('search.by_phrase');
+
+    Route::get('/statistic', [StatisticController::class, 'index'])->name('statistic');
+    Route::get('/add-words/{language_id}', [StatisticController::class, 'addingWords'])->name('stat.add.words');
+
+
+    Route::get('/temp', [StatisticController::class, 'temp']);
 
 });
 

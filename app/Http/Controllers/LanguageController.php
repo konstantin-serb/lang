@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LanguageRequest;
 use App\Models\Language;
+use App\Models\Options;
 use App\Models\Section;
 use Illuminate\Http\Request;
 
@@ -28,6 +29,12 @@ class LanguageController extends Controller
         $language = new Language($request->all());
         $language->user_id = auth()->id();
         if($language->save()) {
+            $options = Options::firstOrNew(['user_id' => auth()->id()]);
+            if(!$options->default_language_id) {
+                $options->default_language_id = $language->id;
+                $options->save();
+            }
+
             return redirect()->route('language.index');
         }
 

@@ -13,9 +13,10 @@ class Dictionary extends Model
     protected $guarded = false;
 
 
-    public static function getAll()
+    public static function getAll($language_id)
     {
         return self::where('user_id', auth()->id())
+            ->where('language_id', '=', $language_id)
             ->orderBy('word')
             ->get();
     }
@@ -36,6 +37,18 @@ class Dictionary extends Model
             ->orderBy('word')
             ->count();
     }
+
+
+    public static function getForLanguageAll($language_id)
+    {
+        return self::where('user_id', auth()->id())
+            ->select(['created_at', 'id'])
+            ->where('language_id', '=', $language_id)
+            ->where('status', '=', 1)
+            ->orderBy('created_at', 'asc')
+            ->get();
+    }
+
 
 
     public static function getWordsToday($language_id)

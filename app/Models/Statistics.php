@@ -13,9 +13,10 @@ class Statistics extends Model
     public $timestamps = false;
 
 
-    public static function getRepeatedToday()
+    public static function getRepeatedToday($language_id)
     {
         $statistics  = self::where('user_id', auth()->id())
+            ->where('language_id', '=', $language_id)
             ->where('date', '=', date('Y-m-d'))
             ->first();
 
@@ -27,9 +28,10 @@ class Statistics extends Model
     }
 
 
-    public static function getCreatedToday()
+    public static function getCreatedToday($language_id)
     {
         $statistics  = self::where('user_id', auth()->id())
+            ->where('language_id', '=', $language_id)
             ->where('date', '=', date('Y-m-d'))
             ->first();
 
@@ -41,10 +43,11 @@ class Statistics extends Model
     }
 
 
-    public static function getReadToday()
+    public static function getReadToday($language_id)
     {
         $statistics  = self::where('user_id', auth()->id())
             ->where('date', '=', date('Y-m-d'))
+            ->where('language_id', '=', $language_id)
             ->first();
 
         if(isset($statistics->readed)) {
@@ -53,5 +56,57 @@ class Statistics extends Model
             return 0;
         }
     }
+
+
+    public static function getStatisticTotal($language_id)
+    {
+        $statistics  = self::where('user_id', auth()->id())
+            ->where('language_id', '=', $language_id)
+            ->get();
+        return $statistics;
+    }
+
+
+    public static function getRepeatedTotal($language_id)
+    {
+        $statistic = self::getStatisticTotal($language_id);
+        return $statistic->sum('repeated');
+    }
+
+
+    public static function getReadTotal($language_id)
+    {
+        $statistic = self::getStatisticTotal($language_id);
+        return $statistic->sum('readed');
+    }
+
+    public static function getStatisticOne($language_id, $date)
+    {
+        $user_id = auth()->id();
+        $statistic = Statistics::where('user_id', $user_id)
+            ->where('language_id', '=', $language_id)
+            ->where('date', '=', $date)
+            ->first();
+        return $statistic;
+    }
+
+
+    public static function minusWordsCalculate($word)
+    {
+        $date = date('Y-m-d', strtotime($word->created_at));
+        $statistic = self::getStatisticOne($word->language_id, $date);
+        $statistic->words = $statistic->words - 1;
+        $statistic->save();
+    }
+
+
+    public static function plusWordsCalculate($word)
+    {
+        $date = date('Y-m-d', strtotime($word->created_at));
+        $statistic = self::getStatisticOne($word->language_id, $date);
+        $statistic->words = $statistic->words + 1;
+        $statistic->save();
+    }
+
 
 }

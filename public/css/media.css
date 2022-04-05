@@ -19,4 +19,8 @@
         float: left;
         padding-bottom: 0.3em;
     }
+
+    .floatRight {
+        float: left;
+    }
 }

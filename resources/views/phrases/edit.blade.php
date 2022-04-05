@@ -16,7 +16,7 @@
         <h2 class="">{{ $title }}</h2>
         <br>
         <a class="btn btn-secondary" href="{{ route('phrase.create.phrase', ['section' => $phrase->section->id]) }}">
-            Вернуться назад
+            Вернуться в раздел
         </a>
 
         <div class="form">
@@ -49,19 +49,6 @@
 
                     <div class="col-lg-6">
                         <div class="mt-3">
-                            <label class="mb-2">Сложность</label>
-                            <select class="form-select inp-text "
-                                   name="complexity" autocomplete="off" spellcheck="false">
-                                <option value="1" @if($phrase->complexity == 1) selected @endif>Легкая</option>
-                                <option value="2" @if($phrase->complexity == 2) selected @endif>Средняя</option>
-                                <option value="3" @if($phrase->complexity == 3) selected @endif>Тяжелая</option>
-                            </select>
-
-                        </div>
-                    </div>
-
-                    <div class="col-lg-6">
-                        <div class="mt-3">
                             <label class="mb-2">Транскрипция</label>
                             <input class="form-control inp-text @error('transcription') is-invalid @enderror"
                                    name="transcription"
@@ -69,6 +56,19 @@
                             @error('transcription')
                             <span class="invalid-feedback"><strong>{{ $message }}</strong></span>
                             @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="mt-3">
+                            <label class="mb-2">Уровень сложности</label>
+                            <select class="form-select inp-text "
+                                    name="complexity" autocomplete="off" spellcheck="false">
+                                <option value="1" @if($phrase->complexity == 1) selected @endif>Легкий</option>
+                                <option value="2" @if($phrase->complexity == 2) selected @endif>Средний</option>
+                                <option value="3" @if($phrase->complexity == 3) selected @endif>Сложный</option>
+                            </select>
+
                         </div>
                     </div>
                 </div>

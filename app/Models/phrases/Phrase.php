@@ -38,6 +38,7 @@ class Phrase extends Model
     }
 
 
+
     public static function getPhrasesForSectionSingle($section_id, $sort = 'desc')
     {
         $model = self::getModel();
@@ -50,6 +51,37 @@ class Phrase extends Model
     {
         $model = self::getModel();
         return $model::where('user_id', auth()->id())->where('id', '=', $id)->first();
+    }
+
+    //Получение всех фраз по языку. Сортировка по Id
+    public static function getAllPhrases($language_id)
+    {
+        $model = self::getModel();
+        $phrases = $model->where('user_id', auth()->id())
+            ->where('language_id', '=', $language_id)
+            ->orderBy('id')
+            ->get();
+        return $phrases;
+    }
+
+
+    public static function getCountPhrased($language_id)
+    {
+        $phrases = self::getAllPhrases($language_id);
+        return $phrases->count();
+    }
+
+
+    public static function countSumLearning($language_id)
+    {
+        $phrases = self::getAllPhrases($language_id);
+        return $phrases->sum('count');
+    }
+
+    public static function countSumReading($language_id)
+    {
+        $phrases = self::getAllPhrases($language_id);
+        return $phrases->sum('reading');
     }
 
 
@@ -82,6 +114,72 @@ class Phrase extends Model
             }
         }
     }
+
+
+    public function getPhrasesMix($ids)
+    {
+        $model = self::getModel();
+        $phrased = $model->where('user_id', '=', auth()->id())->whereIn('id', $ids)->get();
+
+        return $phrased;
+    }
+
+
+    public static function getPhrasesForSearch($options)
+    {
+        $model = self::getModel();
+//        dd($options['order']);
+        if($options['task'] == 1) {
+            $task = 'count';
+        } else {
+            $task = 'reading';
+        }
+
+        if($options['complexity'] == 1) {
+            $equals = '>';
+            $complexity = 0;
+        } elseif($options['complexity'] == 2) {
+            $equals = '=';
+            $complexity = 1;
+        } elseif($options['complexity'] == 3) {
+            $equals = '=';
+            $complexity = 2;
+        } elseif($options['complexity'] == 4) {
+            $equals = '=';
+            $complexity = 3;
+        } elseif($options['complexity'] == 2) {
+            $equals = '>';
+            $complexity = 1;
+        }
+
+        if($options['order'] == 1) {
+            $order = 'asc';
+        } elseif($options['order'] == 2) {
+            $order = 'desc';
+        } elseif($options['order'] == 3) {
+            $task = 'id';
+            $order = 'desc';
+        } elseif($options['order'] == 4) {
+            $task = 'id';
+            $order = 'asc';
+        } elseif($options['order'] == 5) {
+            $result = $model->where('language_id', $options['language_id'])
+                ->where('complexity', $equals, $complexity)
+                ->inRandomOrder()
+                ->limit($options['count'])
+                ->get();
+            return $result;
+        }
+
+
+        $result = $model->where('language_id', $options['language_id'])
+            ->where('complexity', $equals, $complexity)
+            ->orderBy($task, $order)
+            ->limit($options['count'])
+            ->offset($options['offset'])
+            ->get();
+            return $result;
+        }
 
     public static function getNullable()
     {
@@ -138,6 +236,49 @@ class Phrase extends Model
             return $model::where('section_id', $section_id)
                 ->where('complexity', '!=', 1)
                 ->orderBy('id', $sort)->get();
+        }
+    }
+
+
+    public static function getPhrasesForHomePage($string)
+    {
+        $model = self::getModel();
+        $ids = explode(',', $string);
+        $revers =array_reverse($ids);
+        $arrayPhrases = [];
+        foreach($revers as $idTime) {
+            $id = explode('/', $idTime);
+            $time = $id[1];
+            $phrase = $model::where('id', $id[0])->first();
+            if($phrase) {
+                $phrase->user_id = $time;
+                array_unshift($arrayPhrases, $phrase);
+            }
+        }
+        $phrases = collect($arrayPhrases);
+        return $phrases;
+    }
+
+
+    public function addBTags($string, $word)
+    {
+        //Количество букв в строке
+        $countLetters = iconv_strlen($string, 'UTF-8');
+
+        //Количество букв в слове
+        $countLetWord = iconv_strlen($word, 'UTF-8');
+
+        //Номер первого вхождения слова в строке
+        $positionWord = stripos($string, $word);
+
+        if($positionWord !== false) {
+            $firstPath = mb_substr($string, 0, $positionWord);
+            $lastPath = mb_substr($string, $positionWord + $countLetWord, $countLetters);
+            $centerPath = mb_substr($string, $positionWord, $countLetWord);
+
+            $result = $firstPath . '<b style="color:blue;">' . $centerPath . '</b>' . $lastPath;
+
+            return $result;
         }
     }
 

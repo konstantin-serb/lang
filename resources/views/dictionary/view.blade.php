@@ -6,8 +6,12 @@
 
     <h4>{{ $word->word }}</h4>
 
-    <div class="mt-3">
+    <div class="mt-3 btn-group">
         <a class="btn btn-danger" href="{{ route('dictionary.delete', ['word' => $word->id]) }}">Удалить слово</a>
+        <?php $countLetterWord = iconv_strlen($word->word)?>
+        @if($countLetterWord > 2)
+        <a class="btn btn-success" href="{{ route('search.by_word', ['language_id' => $word->language_id,'word' => $word->word]) }}">Фразы со словом</a>
+        @endif
     </div>
 </div>
 @endsection

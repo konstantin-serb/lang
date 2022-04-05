@@ -11,13 +11,6 @@ use Illuminate\Http\Request;
 
 class SectionController extends Controller
 {
-
-    public function index()
-    {
-        dd(__METHOD__);
-    }
-
-
     public function createSection($section, Language $language)
     {
         $currentSection = Section::getOne($section);
@@ -72,7 +65,6 @@ class SectionController extends Controller
 
     public function delete($id)
     {
-        dd(__METHOD__);
         $section = Section::getOne($id);
 
         return view('section.delete', compact('section'));

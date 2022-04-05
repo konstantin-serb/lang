@@ -1,0 +1,165 @@
+@extends('layouts.app')
+@section('title', $title = 'Поиск по слову: ' . $word)
+@push('bottom')
+    <script src="/js/jquery.js"></script>
+    <script src="/js/changeComplexity.js"></script>
+    <script src="/js/startLearning.js"></script>
+@endpush
+@section('content')
+    <div class="container">
+
+
+        <form id="form" action="" method="post">
+            @csrf
+        </form>
+
+        <h2 class="b">{{ $title }} ({{ count($phrases) }})</h2>
+        <a class="btn btn-success" href="javascript:history.back()">Назад</a>
+
+        <hr>
+        <input type="hidden" id="word" value="{{ $word }}">
+
+        <div class="row">
+            <div class="col-lg-1">
+                <div class="">
+                    <label class="mb-2">К-во циклов</label>
+                    <select class="form-select" name="cycles" id="countCycles">
+                        <option value="1" selected>1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-lg-2">
+                <div class="">
+                    <label class="mb-2">Сложность</label>
+                    <select class="form-select" name="complexity" id="complexity">
+                        <option value="1" selected>Все</option>
+                        <option value="2">Легкий</option>
+                        <option value="3">Средний</option>
+                        <option value="4">Тяжелый</option>
+                        <option value="5">Тяжелый и средний</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-lg-2">
+                <div class="">
+                    <label class="mb-2">Сортировка</label>
+                    <select class="form-select" name="sort" id="sort">
+                        <option value="1">По порядку</option>
+                        <option value="2" selected>Случайно</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-lg-1">
+                <div class="">
+                    <label class="mb-2">Задача</label>
+                    <select class="form-select" name="task" id="task">
+                        <option value="1" selected>Учить</option>
+                        <option value="2">Читать</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-lg-1">
+                <div class="">
+                    <label class="mb-2">Лимит</label>
+                    <input class="form-control" name="limit" value="200" id="limit">
+                </div>
+            </div>
+
+            <div class="col-lg-2 " style="margin-top:2.2em;">
+                <a id="buttonChoose" href="#" class="btn btn-warning ">&nbsp;Учить!&nbsp;</a>
+            </div>
+
+        </div>
+
+        <hr>
+
+        @if(!$phrases->isEmpty())
+            <?php $num = 1?>
+            @foreach($phrases as $phrase)
+                <div class="h5">
+                    <div class="row">
+                        <div class="col-lg-1">
+                            <span title="{{ $phrase->id }}">{{ $num }}</span>. &nbsp;
+                            <span style="float: right" >
+                                <input class="inputBlock"  type="checkbox" data-id="{{ $phrase->id }}" checked>
+                            </span>
+                        </div>
+                        <div class="col-lg-5">
+
+                            <span title="{{ $phrase->translate }}">
+                                <a href="{{ route('phrase.edit', ['phrase' => $phrase->id]) }}" class="link">
+                                <?=$phrase->addBTags($phrase->phrase, $word)?>
+                                </a>
+                            </span>
+                        </div>
+                        <div class="col-lg-4" style="font-size: 0.8em; font-weight: bold;">
+                            <a class="link" href="{{ route('section.show', ['section' => $phrase->section->id]) }}">
+                                {{ $phrase->section->title }}
+                            </a>
+
+                            @if(isset($phrase->section->parent))
+                                >
+                                <a class="link"
+                                   href="{{ route('section.show', ['section' => $phrase->section->parent->id]) }}">
+                                    {{ $phrase->section->parent->title }}
+                                </a>
+                            @endif
+
+                            @if(isset($phrase->section->parent->parent))
+                                >
+                                <a class="link"
+                                   href="{{ route('section.show', ['section' => $phrase->section->parent->parent->id]) }}">
+                                    {{ $phrase->section->parent->parent->title }}
+                                </a>
+                            @endif
+                        </div>
+                        <div class="col-lg-2">
+                            <div style="text-align: right">
+                                    <span class=""
+                                          style="vertical-align: 0.25em; margin-right: 1em; color:lightblue; font-size: 0.85em;">{{ $phrase->count }} <span
+                                            style="color: rgba(228,0,0,0.51);">({{$phrase->getCountReading()}})</span></span>
+                                <div class="form-check form-check-inline"
+                                     style="margin: 0.01em; padding-right: 0.1em; padding-left: 0.7em;">
+                                    <input class="form-check-input" title="легкий" type="radio"
+                                           data-id="{{ $phrase->id }}" data-type="1"
+                                           name="inlineRadioOptions-{{ $phrase->id }}"
+                                           id="inlineRadio-1-{{$phrase->id}}" value="option1"
+                                           @if($phrase->complexity == 1) checked @endif>
+                                </div>
+                                <div class="form-check form-check-inline"
+                                     style="margin: 0.01em; padding-right: 0.1em; padding-left: 0.7em;">
+                                    <input class="form-check-input" title="средний" type="radio"
+                                           data-id="{{ $phrase->id }}" data-type="2"
+                                           name="inlineRadioOptions-{{ $phrase->id }}"
+                                           id="inlineRadio-2-{{$phrase->id}}" value="option2"
+                                           @if($phrase->complexity == 2) checked @endif>
+                                </div>
+                                <div class="form-check form-check-inline"
+                                     style="margin: 0.01em; padding-right: 0.1em; padding-left: 0.7em;">
+                                    <input class="form-check-input" title="сложный" type="radio"
+                                           data-id="{{ $phrase->id }}" data-type="3"
+                                           name="inlineRadioOptions-{{ $phrase->id }}"
+                                           id="inlineRadio-3-{{$phrase->id}}" value="option3"
+                                           @if($phrase->complexity == 3) checked @endif>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr style="margin-top: 0.1em;, margin-bottom: 0.1em; !important;">
+                </div>
+                <?php $num++?>
+            @endforeach
+
+        @endif
+
+
+    </div>
+@endsection
