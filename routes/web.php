@@ -60,6 +60,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/search/by_word', [SearchController::class, 'searchPhrase'])->name('search.by_phrase');
 
     Route::get('/statistic', [StatisticController::class, 'index'])->name('statistic');
+    Route::get('/statistic/diagram/{language_id}/{type}', [StatisticController::class, 'getDiagramType1'])->name('statistic.diagram1');
     Route::get('/add-words/{language_id}', [StatisticController::class, 'addingWords'])->name('stat.add.words');
 
 

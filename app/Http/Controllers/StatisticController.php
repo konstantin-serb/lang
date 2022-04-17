@@ -39,24 +39,24 @@ class StatisticController extends Controller
             ->orderBy('created_at', 'asc')
             ->get();
         $startDate = date('Y-m-d', strtotime($phrases[0]->created_at));
-        $lastPhrase = $phrases[count($phrases)-1];
+        $lastPhrase = $phrases[count($phrases) - 1];
 
         // Цикл для занесения данных количества фраз в таблицу статистики
         $i = $startDate;
-        $endDate = date('Y-m-d', strtotime($phrases[count($phrases)-1]->created_at));
+        $endDate = date('Y-m-d', strtotime($phrases[count($phrases) - 1]->created_at));
         $sum = 0;
         while ($i <= $endDate):
             $from = $i . ' 00:00:00';
             $to = $i . ' 23:59:59';
             $countPhrases = $model->whereBetween('created_at', [$from, $to])->count();
-            if($countPhrases > 0) {
-                $statistic =  Statistics::firstOrNew(['user_id' => auth()->id(),
+            if ($countPhrases > 0) {
+                $statistic = Statistics::firstOrNew(['user_id' => auth()->id(),
                     'language_id' => 1, 'date' => $i]);
                 $statistic->created = $countPhrases;
                 $statistic->save();
             }
             // Приращение цикла
-        $sum = $sum + $countPhrases;
+            $sum = $sum + $countPhrases;
             $i = date('Y-m-d', strtotime("+1 day", strtotime($i)));
         endwhile;
 
@@ -64,6 +64,69 @@ class StatisticController extends Controller
         $statistics = Statistics::all();
         dd($statistics->sum('created'));
 
+    }
+
+
+    public function getDiagramType1($language_id, $type)
+    {
+        $period = 100;
+        $start = date('Y-m-d', strtotime($period . ' days ago', time()));
+        $end = date('Y-m-d', time());
+
+        $arraysCreated = $this->getArraysForDiagrams($start, $end, $language_id, $type, 7);
+        $count = $arraysCreated['count'];
+        $dates = $arraysCreated['date'];
+        $countProgress = $this->arrayProgress($arraysCreated['count']);
+
+        $scheduleValue = [
+            'name' => 'Прогрессивный график добавления новых фраз за ' . $period . ' дней',
+            'progressName' => 'График добавления новых фраз за ' . $period . ' дней',
+
+        ];
+
+        return view('statistic.diagram-1', compact('countProgress', 'count', 'dates', 'scheduleValue', 'period'));
+    }
+
+
+    private function arrayProgress($array)
+    {
+        $progress = [];
+        for ($i = 0; $i < count($array); $i++):
+            if ($i === 0) {
+                $progress[$i] = $array[$i];
+            } else {
+                $progress[$i] = $array[$i] + $progress[$i - 1];
+            }
+        endfor;
+
+            return $progress;
+    }
+
+
+    private function getArraysForDiagrams($start, $end, $language_id, $type, $daysAdd)
+    {
+        $i = $start;
+        $countArray = [];
+        $dateArray = [];
+        $num = 0;
+        while ($i <= $end):
+            $nextDate = date('Y-m-d', strtotime('+' . $daysAdd . ' days', strtotime($i)));
+            if($num > 0) $i = date('Y-m-d', strtotime('+1 day', strtotime($i)));
+
+            $items = Statistics::where('user_id', auth()->id())->where('language_id', '=', $language_id)
+                ->whereBetween('date', [$i, $nextDate])->get();
+
+            $countArray[$num] = $items->sum($type);
+            $dateArray[$num] = $nextDate;
+
+            $i = $nextDate;
+            $num++;
+        endwhile;
+
+        return [
+            'count' => $countArray,
+            'date' => $dateArray,
+        ];
     }
 
 
@@ -80,7 +143,7 @@ class StatisticController extends Controller
 
         //Дата начала выборки
         $startDate = $firstDate;
-        if($firstDayWeek != 1) {
+        if ($firstDayWeek != 1) {
             $startDate = date('Y-m-d', strtotime("last Monday", strtotime($firstDate)));
         }
 
@@ -98,7 +161,7 @@ class StatisticController extends Controller
 //            dd($from, $before);
             $count = $dictionary->whereBetween('created_at', [$from, $before])->count();
             $countWordsForWeek[$num] = $count;
-            if(isset($countWordsForWeek[$num - 1])) {
+            if (isset($countWordsForWeek[$num - 1])) {
                 $countWordsForWeek[$num] = $count + $countWordsForWeek[$num - 1];
             }
             $dateArray[$num] = $nexDate;
@@ -108,8 +171,8 @@ class StatisticController extends Controller
         endwhile;
 
         $countArray = count($dateArray);
-        if($countArray > 0) {
-            $dateArray[$countArray-1] = $currentDate;
+        if ($countArray > 0) {
+            $dateArray[$countArray - 1] = $currentDate;
         }
 
         return view('statistic.add-words', compact('dateArray', 'countWordsForWeek', 'language'));

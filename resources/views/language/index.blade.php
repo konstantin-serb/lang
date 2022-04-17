@@ -1,7 +1,16 @@
 @extends('layouts.app')
 @section('title', 'Языки')
 @section('content')
-    <div class="container">
+
+
+        <div class="" style="margin-top:-1.6em;">
+            @if(!$statistics->isEmpty())
+                @include('home.parts.success-today')
+            @endif
+        </div>
+
+        <div class="container">
+
         <h2 class="b">Языки</h2>
 
         <div>

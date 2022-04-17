@@ -13,27 +13,31 @@ class Statistics extends Model
     public $timestamps = false;
 
 
-    public static function getRepeatedToday($language_id)
+    public function language()
     {
-        $statistics  = self::where('user_id', auth()->id())
-            ->where('language_id', '=', $language_id)
-            ->where('date', '=', date('Y-m-d'))
-            ->first();
-
-        if(isset($statistics->repeated)) {
-            return $statistics->repeated;
-        } else {
-            return 0;
-        }
+        return $this->belongsTo(Language::class);
     }
 
 
-    public static function getCreatedToday($language_id)
+    public static function getStatisticToday()
     {
         $statistics  = self::where('user_id', auth()->id())
+            ->where('date', '=', date('Y-m-d'))
+            ->get();
+        return $statistics;
+    }
+
+    function getToday($language_id)
+    {
+        return self::where('user_id', auth()->id())
             ->where('language_id', '=', $language_id)
             ->where('date', '=', date('Y-m-d'))
             ->first();
+    }
+
+    public static function getCreatedToday($language_id)
+    {
+        $statistics  = self::getToday($language_id);
 
         if(isset($statistics->created)) {
             return $statistics->created;
@@ -45,10 +49,7 @@ class Statistics extends Model
 
     public static function getReadToday($language_id)
     {
-        $statistics  = self::where('user_id', auth()->id())
-            ->where('date', '=', date('Y-m-d'))
-            ->where('language_id', '=', $language_id)
-            ->first();
+        $statistics  = self::getToday($language_id);
 
         if(isset($statistics->readed)) {
             return $statistics->readed;
@@ -56,6 +57,31 @@ class Statistics extends Model
             return 0;
         }
     }
+
+
+    public static function getRepeatedToday($language_id)
+    {
+        $statistics  = self::getToday($language_id);
+
+        if(isset($statistics->repeated)) {
+            return $statistics->repeated;
+        } else {
+            return 0;
+        }
+    }
+
+
+    public static function getNewWordsToday($language_id)
+    {
+        $statistics  = self::getToday($language_id);
+
+        if(isset($statistics->words)) {
+            return $statistics->words;
+        } else {
+            return 0;
+        }
+    }
+
 
 
     public static function getStatisticTotal($language_id)
@@ -107,6 +133,29 @@ class Statistics extends Model
         $statistic->words = $statistic->words + 1;
         $statistic->save();
     }
+
+
+    public static function getColor($count)
+    {
+        if($count == 0) {
+            return 'color: black;';
+        }
+
+        if($count > 500) {
+            return 'color: #b22222';
+        }
+
+        if($count > 100) {
+            return 'color: blue;';
+        }
+
+        if($count < 100) {
+            return 'color:#800080;';
+        }
+
+
+    }
+
 
 
 }

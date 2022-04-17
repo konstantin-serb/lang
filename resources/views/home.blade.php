@@ -9,8 +9,15 @@
     <form id="form" action="" method="post">
         @csrf
     </form>
+    <div class="" style="margin-top:-1.6em;">
+        @if(!$statistics->isEmpty())
+            @include('home.parts.success-today')
+        @endif
+    </div>
     <div class="container">
         <h2>Привет {{ auth()->user()->name }}!</h2>
+
+
 
         @if(!$languages->isEmpty())
 

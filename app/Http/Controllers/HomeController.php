@@ -7,6 +7,7 @@ use App\Models\Language;
 use App\Models\Options;
 use App\Models\phrases\Phrase;
 use App\Models\Section;
+use App\Models\Statistics;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -15,6 +16,7 @@ class HomeController extends Controller
     public function index()
     {
         $options = Options::firstOrCreate(['user_id' => auth()->id()]);
+        $statistics = Statistics::getStatisticToday();
         $sectionsLear = null;
         $sectionsRead = null;
         $phrases = null;
@@ -33,7 +35,8 @@ class HomeController extends Controller
         $languageDefault = Options::getDefaultLanguage();
         $languages = Language::getAll();
 
-        return view('home', compact('languages', 'languageDefault', 'options', 'sectionsLear', 'sectionsRead', 'phrases'));
+        return view('home', compact('languages',
+            'languageDefault', 'options', 'sectionsLear', 'sectionsRead', 'phrases', 'statistics'));
     }
 
 

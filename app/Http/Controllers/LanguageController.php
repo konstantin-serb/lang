@@ -6,6 +6,7 @@ use App\Http\Requests\LanguageRequest;
 use App\Models\Language;
 use App\Models\Options;
 use App\Models\Section;
+use App\Models\Statistics;
 use Illuminate\Http\Request;
 
 class LanguageController extends Controller
@@ -13,8 +14,9 @@ class LanguageController extends Controller
     public function index()
     {
         $languages = Language::getAll();
+        $statistics = Statistics::getStatisticToday();
 
-        return view('language.index', compact('languages'));
+        return view('language.index', compact('languages', 'statistics'));
     }
 
 

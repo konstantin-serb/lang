@@ -24,8 +24,10 @@
                     <h3>{{ $item->title }}</h3>
                     <div class="row">
                         <div class="col-lg-3">
-                            <span>Общее количество фраз: </span>  <span class="b text-primary">{{ \App\Models\Statistics::getStatisticTotal($item->id)->sum('created') }}</span>
-
+                            <?php $created = \App\Models\Statistics::getStatisticTotal($item->id)->sum('created');?>
+                            @if($created > 100) <a href="{{ route('statistic.diagram1', ['language_id' => $item->id, 'type' => 'created']) }}" class="link"> @endif
+                            Общее количество фраз:   <span class="b text-primary">{{ $created }}</span>
+                            @if($created > 100) </a> @endif
                         </div>
                         <div class="col-lg-3">
                             <span>Повторено раз: </span>  <span class="b text-primary">{{ \App\Models\Statistics::getRepeatedTotal($item->id) }}</span>

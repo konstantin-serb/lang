@@ -13,7 +13,11 @@
             </ol>
         </nav>
         <hr>
-
+    </div>
+        @if(!$statistics->isEmpty())
+            @include('home.parts.success-today')
+        @endif
+    <div class="container">
         <h2 class="b">{{ $title }}</h2>
         <form id="form" action="" method="post">
             @csrf

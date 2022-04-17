@@ -31,12 +31,15 @@ class PhraseController extends Controller
         $section = Section::where('id', $model->section_id)->first();
         $model->language_id = $section->language_id;
         if($model->save()){
+            //Добавление Id фразы в историю
+            $options = Options::addPhrase($model->id);
 
             $statistics = Statistics::firstOrNew(['user_id' => auth()->id(),
                 'language_id' => $section->language_id,
                 'date' => date('Y-m-d')]);
             $statistics->created = $statistics->created + 1;
             $statistics->save();
+
             DictionaryController::addPhrase($model->phrase, $request->section_id);
             return redirect()->route('phrase.create.phrase', ['section' => $request->section_id]);
         }

@@ -114,11 +114,19 @@ if(!auth()->guest()) {
                             @if(isset($language_id))
                                 <li class="nav-item" style="padding-bottom: 0.5rem; padding-top: 0.5rem;">Словарный запас: <span class="b">
                                         <a class="link" href="{{ route('dictionary', ['language_id' => $language_id]) }}" target="_blank" >
-                            <?php $countToday = \App\Models\Statistics::getStatisticOne($language_id, date('Y-m-d', time()))->words;
-                                            $countWords = \App\Models\Statistics::getStatisticTotal($language_id)->sum('words');?>
+                            <?php
+                                            if(isset(\App\Models\Statistics::getStatisticOne($language_id, date('Y-m-d', time()))->words)) {
+                                                $countToday = \App\Models\Statistics::getStatisticOne($language_id, date('Y-m-d', time()))->words;
+                                            } else {
+                                                $countToday = 0;
+                                            }
+
+                                            $countWords = \App\Models\Statistics::getStatisticTotal($language_id)->sum('words');
+                                            ?>
+
                                         {{ $countWords }}
                                                 @if($countToday > 0)
-                                                ({{ $countToday }})
+                                    (<span style="{{ \App\Models\Statistics::getColor($countToday) }}">{{ $countToday }}</span>)
                                                     @endif
                                         </a>
                                     </span> слов</li>&nbsp;&nbsp;&nbsp;
@@ -126,18 +134,20 @@ if(!auth()->guest()) {
 
                                 @if(isset($language_id) && \App\Models\Statistics::getCreatedToday($language_id) > 0 )
                                     <li class="nav-item" style="padding-bottom: 0.5rem; padding-top: 0.5rem; padding-right: 1em;">
-                                <span >Сегодня добавлено: <span class="b">{{ \App\Models\Statistics::getCreatedToday($language_id) }}</span>
+                                <span>Сегодня добавлено: <span class="b" style="{{ \App\Models\Statistics::getColor(\App\Models\Statistics::getCreatedToday($language_id)) }}">{{ \App\Models\Statistics::getCreatedToday($language_id) }}</span>
                                     </li>
                                 @endif
 
                                 @if(isset($language_id) && \App\Models\Statistics::getRepeatedToday($language_id) > 0)
                                     <li class="nav-item" style="padding-bottom: 0.5rem; padding-top: 0.5rem; padding-right: 1em;">
-                                    Повторено: <span class="b">{{ \App\Models\Statistics::getRepeatedToday($language_id) }}</span>
+                                    Повторено: <span class="b"
+                                        style="{{ \App\Models\Statistics::getColor(\App\Models\Statistics::getRepeatedToday($language_id)) }}">{{ \App\Models\Statistics::getRepeatedToday($language_id) }}</span>
                                     </li>
                                 @endif
                                 @if(isset($language_id) && \App\Models\Statistics::getReadToday($language_id) > 0)
                                     <li class="nav-item" style="padding-bottom: 0.5rem; padding-top: 0.5rem; padding-right: 1em;" >
-                                    Прочитано: <span class="b">{{ \App\Models\Statistics::getReadToday($language_id) }}</span>&nbsp;
+                                    Прочитано: <span class="b"
+                                        style="{{ \App\Models\Statistics::getColor(\App\Models\Statistics::getReadToday($language_id)) }}">{{ \App\Models\Statistics::getReadToday($language_id) }}</span>&nbsp;
                                     </li>
                                 @endif
                             <li class="nav-item dropdown">
@@ -168,6 +178,7 @@ if(!auth()->guest()) {
 
         </main>
     </div>
+
 
     <footer class="mt-4 pt-5">
         <div class="container">
@@ -234,5 +245,9 @@ if(!auth()->guest()) {
         </div>
     </footer>
     @stack('bottom')
+
+
+
+
 </body>
 </html>

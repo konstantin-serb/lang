@@ -272,8 +272,9 @@ class LearnController extends Controller
     {
         $languageDefault = Options::getDefaultLanguage();
         $languages = Language::getAll();
+        $statistics = Statistics::getStatisticToday();
 
-        return view('learn.train-index', compact('languageDefault', 'languages'));
+        return view('learn.train-index', compact('languageDefault', 'languages', 'statistics'));
     }
 
 
