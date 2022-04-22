@@ -9,11 +9,9 @@ use App\Http\Controllers\DictionaryController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\OptionsCotnroller;
 use App\Http\Controllers\StatisticController;
-
-
+use App\Http\Controllers\FavoriteController;
 
 Route::get('/', [\App\Http\Controllers\HomeController::class, 'startPage']);
-
 
 Auth::routes();
 
@@ -25,11 +23,16 @@ Route::middleware('auth')->group(function () {
     Route::resource('section', SectionController::class);
     Route::get('/section/{section}/{language}/create/new', [SectionController::class, 'createSection'])->name('section.create.sec');
     Route::get('/section/{section}/delete', [SectionController::class, 'delete'])->name('section.delete');
+    Route::get('/section/{section}/check', [SectionController::class, 'deleteCheck'])->name('section.deleteCheck');
+    Route::get('/section/{section}/add-check', [SectionController::class, 'addCheck'])->name('section.addCheck');
 
     Route::resource('phrase', PhraseController::class);
     Route::get('/phrase/{section}/create', [PhraseController::class, 'createPhrase'])->name('phrase.create.phrase');
     Route::get('/phrase/{phrase}/delete', [PhraseController::class, 'delete'])->name('phrase.delete');
     Route::get('/phrase/{section}/deleteAll', [PhraseController::class, 'deleteAll'])->name('phrase.deleteAll');
+    Route::post('/phrase/changeStatus', [PhraseController::class, 'changeStatus']);
+    Route::post('/phrase/change-ajax', [PhraseController::class, 'changePhraseAjax']);
+    Route::post('/phrase/change-favorite-ajax', [PhraseController::class, 'changeFavoriteAjax']);
     Route::delete('/phrase/{section}/destroyAll', [PhraseController::class, 'destroyAll'])->name('phrase.destroyAll');
 
     Route::get('/learn/nullable/{section}', [LearnController::class, 'getNullable'])->name('learn.nullable');
@@ -61,10 +64,15 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/statistic', [StatisticController::class, 'index'])->name('statistic');
     Route::get('/statistic/diagram/{language_id}/{type}', [StatisticController::class, 'getDiagramType1'])->name('statistic.diagram1');
+    Route::get('/statistic/diagram2/{language_id}/{type}', [StatisticController::class, 'getDiagramType2'])->name('statistic.diagram2');
+    Route::get('/statistic/diagram-small/{language_id}/{type}/{period}/{startAdd?}', [StatisticController::class, 'getDiagramSmall'])->name('statistic.diagram.small');
+    Route::get('/statistic/diagram-time/{language_id}/{period}/{startAdd?}', [StatisticController::class, 'getDiagramTime'])->name('statistic.diagram.time');
     Route::get('/add-words/{language_id}', [StatisticController::class, 'addingWords'])->name('stat.add.words');
 
+    Route::get('/favorite', [FavoriteController::class, 'index'])->name('favorite');
+    Route::get('/favorite/clear/{language_id}', [FavoriteController::class, 'clearFavorite'])->name('favorite.clear');
 
-    Route::get('/temp', [StatisticController::class, 'temp']);
+//    Route::get('/temp', [StatisticController::class, 'temp']);
 
 });
 

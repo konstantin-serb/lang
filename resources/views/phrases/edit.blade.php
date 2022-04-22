@@ -1,7 +1,15 @@
 @extends('layouts.app')
 @section('title', $title = 'Редактирование фразы')
+@push('bottom')
+    <script src="/js/jquery.js"></script>
+    <script src="/js/addToFavorite.js"></script>
+@endpush
 @section('content')
     <div class="container">
+        <form id="form" action="" method="post">
+            @csrf
+        </form>
+
         <nav
             style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);"
             aria-label="breadcrumb">
@@ -59,7 +67,7 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-6">
+                    <div class="col-lg-5">
                         <div class="mt-3">
                             <label class="mb-2">Уровень сложности</label>
                             <select class="form-select inp-text "
@@ -68,8 +76,39 @@
                                 <option value="2" @if($phrase->complexity == 2) selected @endif>Средний</option>
                                 <option value="3" @if($phrase->complexity == 3) selected @endif>Сложный</option>
                             </select>
-
                         </div>
+                    </div>
+
+                    <div class="col-lg-1">
+                        <div class="mt-3">
+                            <label class="mb-2">Избранное</label>
+                            <span class="favorite-{{ $phrase->id }}">
+                            <input class="form-check favorite" type="checkbox" data-id="{{ $phrase->id }}"
+                                   @if($phrase->type == 1)
+                                   checked
+                                   @endif
+                            >
+
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+{{--                <hr>--}}
+                <div class="mt-4 mb-3">
+                    <h5 class="b mb-3">Основные сведения:</h5>
+                    <div class="row">
+                        <div class="col-2">Добавлено: </div><div class="col-2"><b>{{ $phrase->created_at }}</b></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2">Изменено (училось): </div><div class="col-2"><b>{{ $phrase->updated_at }}</b></div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-2">Повторено раз: </div><div class="col-2"><b>{{ $phrase->getCountLearning() }}</b></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2">Прочитано раз: </div><div class="col-2"><b>{{ $phrase->getCountReading() }}</b></div>
                     </div>
                 </div>
 

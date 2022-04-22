@@ -79,13 +79,13 @@
 
         </div>
 
-        <hr>
+        <br>
 
         @if(!$phrases->isEmpty())
             <?php $num = 1?>
             @foreach($phrases as $phrase)
-                <div class="h5">
-                    <div class="row">
+                <div class="" style="font-size: 1.15rem;">
+                    <div class="row wordString @if(date('d-m-Y', strtotime($phrase->created_at)) ==  date('d-m-Y', time())) nowadaysPhrase @endif">
                         <div class="col-lg-1">
                             <span title="{{ $phrase->id }}">{{ $num }}</span>. &nbsp;
                             <span style="float: right" >
@@ -153,7 +153,7 @@
                             </div>
                         </div>
                     </div>
-                    <hr style="margin-top: 0.1em;, margin-bottom: 0.1em; !important;">
+
                 </div>
                 <?php $num++?>
             @endforeach

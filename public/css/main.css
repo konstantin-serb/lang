@@ -95,6 +95,33 @@ footer {
     float: right;
 }
 
+.myStatBlock1:last-child {
+    margin-top: 1.5em;
+}
+
+.lastButton {
+    margin-left: 2em;
+}
+
+.nowadays {
+    background-color: rgba(255, 255, 0, 0.24);
+
+}
+
+.newString {
+    padding: 0.6em 0;
+    border-bottom: 1px solid #a4a4a4;
+}
+
+.wordString {
+    padding: 0.4em 0 0.2em 0;
+    border-bottom: 1px solid #bebebe;
+}
+
+.nowadaysPhrase {
+    background-color: rgba(255, 255, 0, 0.12);
+}
+
 
 
 

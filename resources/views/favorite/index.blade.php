@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', $title = 'Результаты поиска')
+@section('title', $title = 'Избранное')
 @push('bottom')
     <script src="/js/jquery.js"></script>
     <script src="/js/changeComplexity.js"></script>
@@ -12,13 +12,50 @@
             aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ route('home') }}">Главная</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('train.index') }}">Тренировка</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('language.show', ['language' => $language->id]) }}">{{ $language->title }}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">{{ $title }}</li>
             </ol>
         </nav>
         <hr>
 
         <h2 class="b">{{ $title }}</h2>
+
+        <h4>У вас в избранном {{ $phrases->count() }} предложений</h4>
+
+    @if(!$phrases->isEmpty())
+        <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                Очистить избранное
+            </button>
+            <span style="margin-left: 1em;">Удалить все предложения из избранного (эти фразы останутся в разделах)</span>
+            <br><hr>
+    @endif
+    <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Очистить избранное</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <h4 class="b">Очистить избранное</h4>
+                        <div>
+                            Здесь вы можете очистить избранное одним кликом. Фразы будут удалены из избранного, но останутся в
+                            тех же разделах
+                            <br>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                        <a href="{{ route('favorite.clear', ['language_id' => $language->id]) }}" class="btn btn-primary">Очистить избранное</a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr>
         <form id="form" action="" method="post">
             @csrf
         </form>
@@ -42,8 +79,8 @@
                 <div class="">
                     <label class="mb-2">Задача</label>
                     <select class="form-select" name="task" id="task">
-                        <option value="1" @if($task == 1) selected @endif>Учить</option>
-                        <option value="2" @if($task == 2) selected @endif>Читать</option>
+                        <option value="1" selected >Учить</option>
+                        <option value="2" >Читать</option>
                     </select>
                 </div>
             </div>
@@ -63,7 +100,7 @@
 
 
         @if(!$phrases->isEmpty())
-            <hr><br>
+            <br>
             <?php $num = 1?>
             @foreach($phrases as $phrase)
                 <div class="" style="font-size: 1.15rem;">

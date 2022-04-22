@@ -8,6 +8,7 @@ use App\Models\Options;
 use App\Models\phrases\Phrase;
 use App\Models\Section;
 use App\Models\Statistics;
+use App\Models\Time;
 use Illuminate\Http\Request;
 
 class LearnController extends Controller
@@ -29,7 +30,6 @@ class LearnController extends Controller
         $task = $options[5];
 
         $phrases = Phrase::getPhrases($sections_id, $complexity);
-
         $compl = false;
         if ($cycles == 1) {
             $compl = true;
@@ -58,7 +58,7 @@ class LearnController extends Controller
         }
 
         Options::setLearnHistory($sections_id, $task);
-
+//        Time::setTime($section->language_id);
 
         if ($task == 1) {
             return view('learn.learn', compact('section', 'array', 'compl'));
@@ -157,7 +157,7 @@ class LearnController extends Controller
         if ($cycles == 1) {
             $compl = true;
         }
-
+//        Time::setTime($language->id);
 
         if ($task == 1) {
             return view('learn.learn-mix', compact('endCollection', 'language', 'compl', 'word'));
@@ -202,6 +202,7 @@ class LearnController extends Controller
             $compl = true;
         }
 
+//        Time::setTime($language->id);
         if ($task == 1) {
             return view('learn.train-mix', compact('endCollection', 'language', 'compl'));
         } else {
@@ -210,34 +211,6 @@ class LearnController extends Controller
 
     }
 
-
-    public function getNullable($section_id)
-    {
-        $section = Section::getOne($section_id);
-        $language_id = $section->language_id;
-
-        $limit = 200;
-        $cycles = 1;
-        $compl = true;
-        $phrases = Phrase::getNullable();
-
-        $arrayAll = [];
-        $num = 0;
-        for ($i = 0; $i < $cycles; $i++) {
-
-            $collection = $phrases->shuffle();
-
-            foreach ($collection as $coll) {
-                if ($coll->section->language_id == $language_id) {
-                    $arrayAll[$num] = $coll;
-                    $num++;
-                }
-            }
-        }
-
-        $array = array_slice($arrayAll, 0, $limit);
-        return view('learn.learn', compact('section', 'array', 'compl'));
-    }
 
 
     public function learnCommutator(LearnCommutatorRequest $request)
@@ -291,6 +264,8 @@ class LearnController extends Controller
     public function checkPhraseAjax(Request $request)
     {
         $phrase = Phrase::getOne($request->id);
+        Time::setTime($phrase->language_id);
+
         if ($phrase->phrase === $request->value) {
             $phrase->count = $phrase->count + 1;
             $statistics = Statistics::firstOrNew(['user_id' => auth()->id(),
@@ -298,17 +273,29 @@ class LearnController extends Controller
                 'date' => date('Y-m-d')]);
             $statistics->repeated = $statistics->repeated + 1;
             $statistics->save();
+
             $phrase->save();
+            $timeToday = Time::getTimeToday($phrase->language_id);
+            $time = '(<b style="color:blue;">' . $timeToday['hours'] .'</b>:<b style="color:blue;">'. $timeToday['minutes']
+                .'</b>:<b style="color:blue;">'. $timeToday['seconds'] .'</b>)';
             $response = [
                 'success' => true,
                 'string' => (string)'<input class="my-input true" type="text" style="width: 100%; border: none" data-id="' . $phrase->id . '" value="' . $request->value . '" data-num="' . $request->key . '">',
+                'repeated' => $statistics->repeated,
+                'phrase_count' => $phrase->count,
+                'timeTop' => $time,
             ];
         } else {
+            $timeToday = Time::getTimeToday($phrase->language_id);
+            $time = '(<b style="color:blue;">' . $timeToday['hours'] .'</b>:<b style="color:blue;">'. $timeToday['minutes']
+                .'</b>:<b style="color:blue;">'. $timeToday['seconds'] .'</b>)';
             $response = [
                 'success' => false,
                 'string' => (string)'<input class="my-input false" type="text" style="width: 100%; border: none" data-id="' . $phrase->id . '" value="' . $request->value . '" data-num="' . $request->key . '">',
+                'timeTop' => $time,
             ];
         }
+
         return response()->json($response);
     }
 
@@ -318,12 +305,24 @@ class LearnController extends Controller
         $phrase = Phrase::getOne($request->id);
         $phrase->reading++;
         $phrase->save();
-
         $statistics = Statistics::firstOrNew(['user_id' => auth()->id(),
             'language_id' => $phrase->language_id,
             'date' => date('Y-m-d')]);
         $statistics->readed++;
-        $statistics->save();
+
+        Time::setTime($phrase->language_id);
+        $timeToday = Time::getTimeToday($phrase->language_id);
+        $time = '(<b style="color:blue;">' . $timeToday['hours'] .'</b>:<b style="color:blue;">'. $timeToday['minutes']
+            .'</b>:<b style="color:blue;">'. $timeToday['seconds'] .'</b>)';
+        if($statistics->save()) {
+            $response = [
+                'success' => true,
+                'read' => $statistics->readed,
+                'phrase_read' => $phrase->reading,
+                'timeTop' => $time,
+            ];
+        }
+        return response()->json($response);
     }
 
 

@@ -88,6 +88,7 @@ class Statistics extends Model
     {
         $statistics  = self::where('user_id', auth()->id())
             ->where('language_id', '=', $language_id)
+            ->orderBy('date')
             ->get();
         return $statistics;
     }
@@ -152,8 +153,55 @@ class Statistics extends Model
         if($count < 100) {
             return 'color:#800080;';
         }
+    }
+
+    public function getNumberGregDay($date)
+    {
+        $innerDate = getdate(strtotime($date));
+        $numberDay =gregoriantojd($innerDate['mon'], $innerDate['mday'], $innerDate['year']);
+        return $numberDay;
+    }
+
+    public static function checkCountDays($language_id, $minDays=7)
+    {
+        $statistics = self::getStatisticTotal($language_id);
+        $count = $statistics->count();
+        if($count > 10) {
+            $startGregorian = self::getNumberGregDay($statistics[0]->date);
+            $endGregorian = self::getNumberGregDay($statistics[$count-1]->date);
+            $difference = $endGregorian - $startGregorian;
+            if($difference >= $minDays) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
 
 
+    }
+
+
+    public static function calculateStartAndEnd($language_id)
+    {
+        $countStep = 19;
+        $statistics = self::getStatisticTotal($language_id);
+        $count = $statistics->count();
+        $startGregorian = self::getNumberGregDay($statistics[0]->date);
+        $endGregorian = self::getNumberGregDay($statistics[$count-1]->date);
+        $difference = $endGregorian - $startGregorian;
+
+        $period = intval(round($difference / $countStep));
+        if($period < 2) {
+            $period = 2;
+        }
+
+        return [
+            'start' => $statistics[0]->date,
+            'end' => $statistics[$count-1]->date,
+            'period' => $period,
+        ];
     }
 
 

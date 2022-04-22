@@ -15,9 +15,16 @@ function read() {
                     id: id,
                 },
                 success: function(data) {
-                    // let str = document.querySelector('#selector'+ key + '-' + id);
-                    // str.innerHTML = data.string;
+                    let readAll = document.querySelector('#read');
+                    readAll.innerHTML = data.read;
+                    let timeTop = document.querySelector('#time');
+                    timeTop.innerHTML = data.timeTop;
+                    let countPhrases = document.querySelectorAll('.count' + id);
+                    for(let i = 0; i < countPhrases.length; i++) {
+                        countPhrases[i].innerHTML = data.phrase_read;
+                    }
                     read();
+
                 }
             });
         }

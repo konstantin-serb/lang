@@ -2,6 +2,7 @@
 
 namespace App\Models\phrases;
 
+use App\Models\Language;
 use App\Models\Section;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -20,6 +21,12 @@ class Phrase extends Model
         return $this->belongsTo(Section::class);
     }
 
+
+    public function language()
+    {
+        return $this->belongsTo(Language::class);
+    }
+
     public static function getModel()
     {
         $key = auth()->user()->key;
@@ -32,6 +39,16 @@ class Phrase extends Model
     {
         if($this->reading > 0) {
             return $this->reading;
+        } else {
+            return 0;
+        }
+    }
+
+
+    public function getCountLearning()
+    {
+        if($this->count > 0) {
+            return $this->count;
         } else {
             return 0;
         }
@@ -90,36 +107,65 @@ class Phrase extends Model
         $model = self::getModel();
         if(is_array($sections_id)) {
             if($complexity == 1) {
-            return $model::whereIn('section_id', $sections_id)->orderBy('id')->get();
+            return $model::whereIn('section_id', $sections_id)->where('status', '=', 1)->orderBy('id')->get();
                 } elseif($complexity ==2) {
-                return $model::whereIn('section_id', $sections_id)->where('complexity', '=', 1)->orderBy('id')->get();
+                return $model::whereIn('section_id', $sections_id)->where('complexity', '=', 1)
+                    ->where('status', '=', 1)->orderBy('id')->get();
             } elseif($complexity == 3) {
-                return $model::whereIn('section_id', $sections_id)->where('complexity', '=', 2)->orderBy('id')->get();
+                return $model::whereIn('section_id', $sections_id)->where('complexity', '=', 2)
+                    ->where('status', '=', 1)->orderBy('id')->get();
             } elseif ($complexity == 4) {
-                return $model::whereIn('section_id', $sections_id)->where('complexity', '=', 3)->orderBy('id')->get();
+                return $model::whereIn('section_id', $sections_id)->where('complexity', '=', 3)
+                    ->where('status', '=', 1)->orderBy('id')->get();
             } elseif ($complexity == 5) {
-                return $model::whereIn('section_id', $sections_id)->where('complexity', '>', 1)->orderBy('id')->get();
+                return $model::whereIn('section_id', $sections_id)->where('complexity', '>', 1)
+                    ->where('status', '=', 1)->orderBy('id')->get();
             }
         } else {
             if($complexity == 1) {
-                return $model::where('section_id', $sections_id)->orderBy('id')->get();
+                return $model::where('section_id', $sections_id)->where('status', '=', 1)->orderBy('id')->get();
             } elseif($complexity ==2) {
-                return $model::where('section_id', $sections_id)->where('complexity', '=', 1)->orderBy('id')->get();
+                return $model::where('section_id', $sections_id)->where('complexity', '=', 1)
+                    ->where('status', '=', 1)->orderBy('id')->get();
             } elseif($complexity == 3) {
-                return $model::where('section_id', $sections_id)->where('complexity', '=', 2)->orderBy('id')->get();
+                return $model::where('section_id', $sections_id)->where('complexity', '=', 2)
+                    ->where('status', '=', 1)->orderBy('id')->get();
             } elseif ($complexity == 4) {
-                return $model::where('section_id', $sections_id)->where('complexity', '=', 3)->orderBy('id')->get();
+                return $model::where('section_id', $sections_id)->where('complexity', '=', 3)
+                    ->where('status', '=', 1)->orderBy('id')->get();
             } elseif ($complexity == 5) {
-                return $model::where('section_id', $sections_id)->where('complexity', '>', 1)->orderBy('id')->get();
+                return $model::where('section_id', $sections_id)->where('complexity', '>', 1)
+                    ->where('status', '=', 1)->orderBy('id')->get();
             }
         }
+    }
+
+    public static function getFavorite($languages_id)
+    {
+        $model = self::getModel();
+        $phrases = $model->where('user_id', '=', auth()->id())
+            ->where('type', '=', 1)
+            ->where('status', '=', 1)
+            ->orderBy('updated_at', 'desc')
+            ->get();
+        return $phrases;
+    }
+
+    public static function clearFavorite($languages_id)
+    {
+        $favorites = self::getFavorite($languages_id);
+        foreach($favorites as $phrase) {
+            $phrase->type = null;
+            $phrase->save();
+        }
+        return true;
     }
 
 
     public function getPhrasesMix($ids)
     {
         $model = self::getModel();
-        $phrased = $model->where('user_id', '=', auth()->id())->whereIn('id', $ids)->get();
+        $phrased = $model->where('user_id', '=', auth()->id())->whereIn('id', $ids)->where('status', '=', 1)->get();
 
         return $phrased;
     }
@@ -128,7 +174,6 @@ class Phrase extends Model
     public static function getPhrasesForSearch($options)
     {
         $model = self::getModel();
-//        dd($options['order']);
         if($options['task'] == 1) {
             $task = 'count';
         } else {
@@ -165,6 +210,7 @@ class Phrase extends Model
         } elseif($options['order'] == 5) {
             $result = $model->where('language_id', $options['language_id'])
                 ->where('complexity', $equals, $complexity)
+                ->where('status', '=', 1)
                 ->inRandomOrder()
                 ->limit($options['count'])
                 ->get();
@@ -173,6 +219,7 @@ class Phrase extends Model
 
 
         $result = $model->where('language_id', $options['language_id'])
+            ->where('status', '=', 1)
             ->where('complexity', $equals, $complexity)
             ->orderBy($task, $order)
             ->limit($options['count'])
@@ -212,10 +259,12 @@ class Phrase extends Model
             $section_id = $section->sectionIds($section);
             return $model::whereIn('section_id', $section_id)
                 ->where('complexity', '=', 3)
+                ->where('status', '=', 1)
                 ->orderBy('id', $sort)->get();
         } else {
             return $model::where('section_id', $section_id)
                 ->where('complexity', '=', 3)
+                ->where('status', '=', 1)
                 ->orderBy('id', $sort)->get();
         }
 
@@ -231,10 +280,12 @@ class Phrase extends Model
             $section_id = $section->sectionIds($section);
             return $model::whereIn('section_id', $section_id)
                 ->where('complexity', '!=', 1)
+                ->where('status', '=', 1)
                 ->orderBy('id', $sort)->get();
         } else {
             return $model::where('section_id', $section_id)
                 ->where('complexity', '!=', 1)
+                ->where('status', '=', 1)
                 ->orderBy('id', $sort)->get();
         }
     }

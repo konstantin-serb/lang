@@ -90,16 +90,17 @@
             </form>
 
         </div>
-        <hr class="mt-4">
+{{--        <hr class="mt-4">--}}
         @if($section->desctiption)
         <?=$section->description?>
         <hr>
         @endif
         @if(!$phrases->isEmpty())
+            <br>
             <?php $num = count($phrases)?>
             @foreach($phrases as $phrase)
-                <div class="h5">
-                    <div class="row">
+                <div class="" style="font-size: 1.15rem;">
+                    <div class="row wordString @if(date('d-m-Y', strtotime($phrase->created_at)) ==  date('d-m-Y', time())) nowadaysPhrase @endif">
                         <div class="col-lg-1">
                             {{ $num }}
                         </div>
@@ -143,7 +144,7 @@
                             </div>
                         </div>
                     </div>
-                    <hr style="margin-top: 0.1em;, margin-bottom: 0.1em; !important;">
+{{--                    <hr style="margin-top: 0.1em;, margin-bottom: 0.1em; !important;">--}}
                 </div>
                 <?php $num--?>
             @endforeach

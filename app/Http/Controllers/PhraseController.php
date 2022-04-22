@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PhraseAddRequest;
+use App\Http\Requests\PhraseChangeAjaxRequest;
 use App\Http\Requests\PhraseUpdateRequest;
 use App\Models\Dictionary;
 use App\Models\Options;
 use App\Models\phrases\Phrase;
 use App\Models\Section;
 use App\Models\Statistics;
+use App\Models\Time;
 use Illuminate\Http\Request;
 
 class PhraseController extends Controller
@@ -17,6 +19,7 @@ class PhraseController extends Controller
     {
         $section = Section::getOne($section_id);
         $phrases = Phrase::getPhrasesForSection($section_id);
+        Time::setTime($section->language_id);
 
         return view('phrases.create', compact('section', 'phrases'));
     }
@@ -41,6 +44,7 @@ class PhraseController extends Controller
             $statistics->save();
 
             DictionaryController::addPhrase($model->phrase, $request->section_id);
+            Options::setLearnHistory($request->section_id, 3);
             return redirect()->route('phrase.create.phrase', ['section' => $request->section_id]);
         }
 
@@ -52,6 +56,7 @@ class PhraseController extends Controller
     {
         $phrase = Phrase::getOne($id);
         $language_id = $phrase->language_id;
+        Time::setTime($phrase->language_id);
         return view('phrases.edit', compact('phrase', 'language_id'));
     }
 
@@ -114,5 +119,46 @@ class PhraseController extends Controller
             $phrase->delete();
         }
         return redirect()->route('phrase.create.phrase', ['section' => $section_id]);
+    }
+
+
+    public function changeStatus(Request $request)
+    {
+        $model = Phrase::getModel();
+        $phrase = $model->where('id', $request->id)->first();
+        if($phrase->status == 1) {
+            $phrase->status = 0;
+        } else {
+            $phrase->status = 1;
+        }
+        $phrase->save();
+    }
+
+
+    public function changePhraseAjax(PhraseChangeAjaxRequest $request)
+    {
+        $model = Phrase::getOne($request->id);
+        $model->fill($request->all());
+        if($model->save()) {
+            $request = true;
+            return response()->json($request);
+        }
+    }
+
+
+    public function changeFavoriteAjax(Request $request)
+    {
+        $phrase = Phrase::getOne($request->id);
+        if($phrase->type == 1) {
+            $phrase->type = null;
+            $response = "<input class=\"favorite\" type=\"checkbox\" data-id=\"$phrase->id\">";
+        } else {
+            $phrase->type = 1;
+            $response = "<input class=\"favorite\" type=\"checkbox\" data-id=\"$phrase->id\" checked>";
+        }
+
+        $phrase->save();
+
+        return response()->json($response);
     }
 }

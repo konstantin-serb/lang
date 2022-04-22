@@ -26,7 +26,20 @@ use App\Models\Statistics;
                         <?php $read = Statistics::getReadToday($statistic->language_id)?>
                         Прочитано: <span class="b" style="{{ Statistics::getColor($read) }}">{{ $read }}</span>
                     </div>
+
                 </div>
+                <?php $time = \App\Models\Time::getTimeToday($statistic->language->id) ?>
+                @if($time)
+                    <hr>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            Времени на обучение затрачено (ч:м:с):
+                                <b style="color: blue">{{ $time['hours'] }}</b>
+                                : <b style="color: blue">{{ $time['minutes'] }}</b>
+                                : <b style="color: green">{{ $time['seconds'] }}</b>
+                        </div>
+                    </div>
+                @endif
             </div>
     </div>
     @endforeach

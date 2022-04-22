@@ -15,7 +15,10 @@
         @endif
     </div>
     <div class="container">
-        <h2>Привет {{ auth()->user()->name }}!</h2>
+        @if($statistics->isEmpty())
+            <br>
+        @endif
+        <h2 class="mt-3">Привет {{ auth()->user()->name }}!</h2>
 
 
 
@@ -87,6 +90,18 @@
 
         @endif
 
+        @if($sectionsAdd)
+            <br>
+            <br>
+            <hr>
+            <h3 class="mb-3"><b>Последние добавленные разделы:</b></h3>
+
+            @foreach($sectionsAdd as $item)
+                @include('home.cycle1')
+            @endforeach
+        @endif
+
+
         @if($sectionsLear)
             <br>
             <br>
@@ -96,9 +111,6 @@
             @foreach($sectionsLear as $item)
                 @include('home.cycle1')
             @endforeach
-
-
-
         @endif
 
 
@@ -118,10 +130,9 @@
                 <br>
                 <br>
             <h3 class="mb-3"><b>Последние добавленные фразы:</b></h3>
-
-                @foreach($phrases as $phrase)
-                <div class="h5">
-                    <div class="row">
+      @foreach($phrases as $phrase)
+                <div class="" style="font-size: 1.1rem;">
+                    <div class="row wordString @if(date('d-m-Y', $phrase->user_id) ==  date('d-m-Y', time())) nowadays @endif">
                         <div class="col-lg-2">
                             @if(date('d-m-Y', $phrase->user_id) ==  date('d-m-Y', time())) <b style="color: blue">  @endif
                             <span style="font-size: 0.8em;">{{ date('d-m-Y  H:i', $phrase->user_id) }}</span>
@@ -165,7 +176,7 @@
                             </div>
                         </div>
                     </div>
-                    <hr style="margin-top: 0.1em;, margin-bottom: 0.1em; !important;">
+{{--                    <hr style="margin-top: 0.1em;, margin-bottom: 0.1em; !important;">--}}
                 </div>
                 @endforeach
 

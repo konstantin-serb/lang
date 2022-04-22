@@ -3,6 +3,7 @@
 @push('bottom')
     <script src="/js/jquery.js"></script>
     <script src="/js/changeComplexity.js"></script>
+    <script src="/js/changeStatus.js"></script>
 @endpush
 @section('content')
     <div class="container">
@@ -151,15 +152,50 @@
         <hr>
 
         @if(!$phrases->isEmpty())
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            Снять/добавить выделение у всех
+        </button>
+        <span style="margin-left: 1em;">Снимает или добавляет выделение у всего раздела</span>
+        <br><br>
+        @endif
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Снять/добавить выделение</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <h4 class="b">Снять/добавить выделение для всего раздела</h4>
+                        <div>
+                            Фразы, у которых снято выделение (галочка в чекбоксе) не попадают в упраждения по написанию или по чтению
+                            <br>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                        <a href="{{ route('section.addCheck', ['section' => $section->id]) }}" class="btn btn-primary">Добавить выделение</a>
+                        <a href="{{ route('section.deleteCheck', ['section' => $section->id]) }}" class="btn btn-danger">снять выделение у всех</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @if(!$phrases->isEmpty())
             <?php $num = 1?>
             @foreach($phrases as $phrase)
-                <div class="h5">
-                    <div class="row">
+                <div class="" style="font-size: 1.15rem;">
+                    <div class="row wordString @if(date('d-m-Y', strtotime($phrase->created_at)) ==  date('d-m-Y', time())) nowadaysPhrase @endif">
                         <div class="col-lg-1">
                             <span title="{{ $phrase->id }}">{{ $num }}</span>
+                            <span style="float: right;"><input type="checkbox" class="check-status" data-id="{{ $phrase->id }}"
+                                   @if($phrase->status == 1) checked @endif > </span>
                         </div>
                         <div class="col-lg-5">
+                            <a class="myLink" href="{{ route('phrase.edit', ['phrase' => $phrase->id]) }}">
                             <span title="{{ $phrase->transcription }}">{{ $phrase->phrase }}</span>
+                            </a>
                         </div>
                         <div class="col-lg-4">
                             {{ $phrase->translate }}
@@ -195,7 +231,7 @@
                             </div>
                         </div>
                     </div>
-                    <hr style="margin-top: 0.1em;, margin-bottom: 0.1em; !important;">
+
                 </div>
                 <?php $num++?>
             @endforeach

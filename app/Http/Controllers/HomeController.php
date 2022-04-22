@@ -8,6 +8,7 @@ use App\Models\Options;
 use App\Models\phrases\Phrase;
 use App\Models\Section;
 use App\Models\Statistics;
+use App\Models\Time;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -17,8 +18,10 @@ class HomeController extends Controller
     {
         $options = Options::firstOrCreate(['user_id' => auth()->id()]);
         $statistics = Statistics::getStatisticToday();
+
         $sectionsLear = null;
         $sectionsRead = null;
+        $sectionsAdd = null;
         $phrases = null;
         if($options->last_sections_learn) {
             $sectionsLear = Section::getSections($options->last_sections_learn);
@@ -26,6 +29,10 @@ class HomeController extends Controller
 
         if($options->last_sections_read) {
             $sectionsRead = Section::getSections($options->last_sections_read);
+        }
+
+        if($options->last_section_add) {
+            $sectionsAdd = Section::getSections($options->last_section_add);
         }
 
         if($options->phrases){
@@ -36,7 +43,7 @@ class HomeController extends Controller
         $languages = Language::getAll();
 
         return view('home', compact('languages',
-            'languageDefault', 'options', 'sectionsLear', 'sectionsRead', 'phrases', 'statistics'));
+            'languageDefault', 'options', 'sectionsLear', 'sectionsRead', 'sectionsAdd', 'phrases', 'statistics'));
     }
 
 

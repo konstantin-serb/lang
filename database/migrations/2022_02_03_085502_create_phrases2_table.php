@@ -24,6 +24,7 @@ class CreatePhrases2Table extends Migration
             $table->integer('count')->default(0);
             $table->integer('reading')->nullable();
             $table->integer('complexity')->default(2);
+            $table->integer('type')->nullable();
 
             $table->softDeletes();
             $table->timestamps();

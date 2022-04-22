@@ -59,7 +59,7 @@ if(!auth()->guest()) {
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm fixed-top" style="opacity: 100%">
             <div class="container">
                 <a class="navbar-brand" href="
                     @auth
@@ -90,6 +90,10 @@ if(!auth()->guest()) {
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('statistic') }}">Статистика</a>
                             </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('favorite') }}">Избранное</a>
+                            </li>
                             @endif
                         @endauth
 
@@ -112,7 +116,7 @@ if(!auth()->guest()) {
                             @endif
                         @else
                             @if(isset($language_id))
-                                <li class="nav-item" style="padding-bottom: 0.5rem; padding-top: 0.5rem;">Словарный запас: <span class="b">
+                                <li class="nav-item" style="padding-bottom: 0.5rem; padding-top: 0.5rem;">Слов: <span class="b">
                                         <a class="link" href="{{ route('dictionary', ['language_id' => $language_id]) }}" target="_blank" >
                             <?php
                                             if(isset(\App\Models\Statistics::getStatisticOne($language_id, date('Y-m-d', time()))->words)) {
@@ -129,27 +133,43 @@ if(!auth()->guest()) {
                                     (<span style="{{ \App\Models\Statistics::getColor($countToday) }}">{{ $countToday }}</span>)
                                                     @endif
                                         </a>
-                                    </span> слов</li>&nbsp;&nbsp;&nbsp;
+                                    </span></li>&nbsp;&nbsp;&nbsp;
                             @endif
 
-                                @if(isset($language_id) && \App\Models\Statistics::getCreatedToday($language_id) > 0 )
+                                @if(isset($language_id))
                                     <li class="nav-item" style="padding-bottom: 0.5rem; padding-top: 0.5rem; padding-right: 1em;">
-                                <span>Сегодня добавлено: <span class="b" style="{{ \App\Models\Statistics::getColor(\App\Models\Statistics::getCreatedToday($language_id)) }}">{{ \App\Models\Statistics::getCreatedToday($language_id) }}</span>
+                                <span>Добавлено: <span class="b" style="{{ \App\Models\Statistics::getColor(\App\Models\Statistics::getCreatedToday($language_id)) }}">{{ \App\Models\Statistics::getCreatedToday($language_id) }}</span>
                                     </li>
                                 @endif
 
-                                @if(isset($language_id) && \App\Models\Statistics::getRepeatedToday($language_id) > 0)
+                                @if(isset($language_id))
                                     <li class="nav-item" style="padding-bottom: 0.5rem; padding-top: 0.5rem; padding-right: 1em;">
-                                    Повторено: <span class="b"
-                                        style="{{ \App\Models\Statistics::getColor(\App\Models\Statistics::getRepeatedToday($language_id)) }}">{{ \App\Models\Statistics::getRepeatedToday($language_id) }}</span>
+                                    Повторено: <span class="b" id="repeated"
+                                        style="{{ \App\Models\Statistics::getColor(\App\Models\Statistics::getRepeatedToday($language_id)) }}">
+                                            {{ \App\Models\Statistics::getRepeatedToday($language_id) }}
+                                        </span>
                                     </li>
                                 @endif
-                                @if(isset($language_id) && \App\Models\Statistics::getReadToday($language_id) > 0)
+                                @if(isset($language_id))
                                     <li class="nav-item" style="padding-bottom: 0.5rem; padding-top: 0.5rem; padding-right: 1em;" >
-                                    Прочитано: <span class="b"
+                                    Прочитано: <span id="read" class="b"
                                         style="{{ \App\Models\Statistics::getColor(\App\Models\Statistics::getReadToday($language_id)) }}">{{ \App\Models\Statistics::getReadToday($language_id) }}</span>&nbsp;
                                     </li>
                                 @endif
+                                <?php if(isset($language_id))  $time = \App\Models\Time::getTimeToday($language_id) ?>
+                                @if(isset($language_id))
+                                    @if(isset($time))
+                                    <li  class="nav-item" style="padding-bottom: 0.5rem; padding-top: 0.5rem; padding-right: 1em;" >
+                                        <span id="time">(<b style="color:blue;">{{ $time['hours'] }}</b>:<b style="color:blue;">{{ $time['minutes'] }}</b>:<b style="color:blue;">{{ $time['seconds'] }}</b>)</span>
+                                    </li>
+                                    @else
+                                        <li  class="nav-item" style="padding-bottom: 0.5rem; padding-top: 0.5rem; padding-right: 1em;" >
+                                            <span id="time">(<b style="color:blue;">00</b>:<b style="color:blue;">00</b>:<b style="color:blue;">00</b>)</span>
+                                        </li>
+                                    @endif
+                                @endif
+
+
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }}
@@ -174,7 +194,9 @@ if(!auth()->guest()) {
         </nav>
 
         <main class="py-4">
+            <div style="margin-top: 3.5em;">
             @yield('content')
+            </div>
 
         </main>
     </div>
@@ -184,13 +206,35 @@ if(!auth()->guest()) {
         <div class="container">
             <div class="row">
                 <div class="col-2">
-                    <h5>Section</h5>
+                    <h5><a class="navbar-brand link" href="
+                    @auth
+                        {{ route('home') }}
+                        @else
+                        {{ url('/') }}
+                        @endauth
+                            ">
+                            {{ config('app.name', 'Laravel') }}
+                        </a></h5>
                     <ul class="nav flex-column">
-                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Home</a></li>
-                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Features</a></li>
-{{--                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Pricing</a></li>--}}
-{{--                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">FAQs</a></li>--}}
-{{--                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">About</a></li>--}}
+                        @auth
+                            <li class="nav-item mb-2 text-muted" >
+                                <a class="nav-link p-0 text-muted" href="{{ route('language.index') }}">Языки</a>
+                            </li>
+                            @if($count > 100)
+                                <li class="nav-item mb-2 text-muted" >
+                                    <a class="nav-link p-0 text-muted" href="{{ route('train.index') }}">Тренировка</a>
+                                </li>
+
+                                <li class="nav-item mb-2 text-muted" >
+                                    <a class="nav-link p-0 text-muted" href="{{ route('statistic') }}">Статистика</a>
+                                </li>
+
+                                <li class="nav-item mb-2 text-muted" >
+                                    <a class="nav-link p-0 text-muted" href="{{ route('favorite') }}">Избранное</a>
+                                </li>
+                            @endif
+                        @endauth
+
                     </ul>
                 </div>
 
@@ -207,7 +251,7 @@ if(!auth()->guest()) {
                 }?>
 
                 @if(isset($languageDefault) && $languageDefault)
-                <div class="col-4 offset-1">
+                <div class="col-lg-6 ">
 
                         <h5>Поиск</h5>
                         <p>Заполните форму и нажмите Найти</p>

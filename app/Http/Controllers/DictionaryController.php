@@ -46,18 +46,17 @@ class DictionaryController extends Controller
 //        dump($array);
         foreach ($array as $phr) {
             $word = mb_strtolower($phr);
-//            dump($word);
             $lastLitera = mb_substr($word, -1);
             $firstLitera = mb_substr($word, 0, 1);
-//            dd($firstLitera);
+
             if ($lastLitera == '?' || $lastLitera == ',' || $lastLitera == '.' || $lastLitera == ';' || $lastLitera == '!'
                 || $lastLitera == ':' || $lastLitera == '!' || $lastLitera == '-' || $lastLitera == ')' || $lastLitera == '('
-                || $lastLitera == '/' || $lastLitera == '|') {
+                || $lastLitera == '/' || $lastLitera == '|' || $lastLitera == "'" || $lastLitera == '"') {
                 $word = mb_substr($word, 0, -1);
             }
 
             if ($firstLitera == '(' || $firstLitera == '?' || $firstLitera == ',' || $firstLitera == '.' || $firstLitera == ';' || $firstLitera == '!'
-                || $firstLitera == ':' || $firstLitera == '!' || $firstLitera == '-' || $firstLitera == ')' || $firstLitera == '/' || $firstLitera == '|') {
+                || $firstLitera == ':' || $firstLitera == '!' || $firstLitera == '-' || $firstLitera == ')' || $firstLitera == '/' || $firstLitera == '|' || $firstLitera == '\'' || $firstLitera == '"') {
                 $word = substr($word, 1);
             }
 

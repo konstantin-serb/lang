@@ -1,6 +1,13 @@
+<?php
+use App\Models\Statistics;
+
+$middleDays = 30;
+?>
+
 @extends('layouts.app')
 @section('title', $title = 'Статистика изучения языков')
 @section('content')
+
     <div class="container">
         <nav
             style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);"
@@ -23,26 +30,124 @@
                 <div class="mt-5">
                     <h3>{{ $item->title }}</h3>
                     <div class="row">
-                        <div class="col-lg-3">
-                            <?php $created = \App\Models\Statistics::getStatisticTotal($item->id)->sum('created');?>
-                            @if($created > 100) <a href="{{ route('statistic.diagram1', ['language_id' => $item->id, 'type' => 'created']) }}" class="link"> @endif
-                            Общее количество фраз:   <span class="b text-primary">{{ $created }}</span>
-                            @if($created > 100) </a> @endif
+                        <div class="col-lg-3 myStatBlock1">
+                            <?php $createdAll = Statistics::getStatisticTotal($item->id)->sum('created');?>
+                            @if(Statistics::checkCountDays($item->id, $middleDays)) <a
+                                href="{{ route('statistic.diagram.small', ['language_id' => $item->id, 'type' => 'created', 'period' => 100]) }}"
+                                class="link"> @endif
+                                Общее количество фраз: <span
+                                    class="@if($createdAll > 0) b text-primary @endif">{{ $createdAll }}</span>
+                                @if(Statistics::checkCountDays($item->id, $middleDays)) </a> @endif
+                            <br>
+                            <?php $created = Statistics::getCreatedToday($item->id)?>
+                            @if(Statistics::checkCountDays($item->id)) <a
+                                href="{{ route('statistic.diagram.small', ['language_id' => $item->id, 'type' => 'created', 'period' => 20]) }}"
+                                class="link"> @endif
+                                @if($created > 0) <b> @endif
+                                    Добавлено сегодня: <span
+                                        class="@if($created>0) b text-danger @endif">{{ $created }}</span>
+                                    @if($created > 0) </b> @endif
+                            @if(Statistics::checkCountDays($item->id)) </a> @endif
+
                         </div>
-                        <div class="col-lg-3">
-                            <span>Повторено раз: </span>  <span class="b text-primary">{{ \App\Models\Statistics::getRepeatedTotal($item->id) }}</span>
+                        <div class="col-lg-3 myStatBlock1">
+                            <?php $repeated = \App\Models\Statistics::getRepeatedTotal($item->id)?>
+                            @if(Statistics::checkCountDays($item->id, $middleDays)) <a
+                                href="{{ route('statistic.diagram.small', ['language_id' => $item->id, 'type' => 'repeated', 'period' => 100]) }}"
+                                class="link"> @endif
+                                <span>Повторено раз: </span> <span
+                                    class="@if($repeated > 0) b text-primary @endif">{{ $repeated }}</span>
+                            @if(Statistics::checkCountDays($item->id, $middleDays)) </a> @endif
+                            <br>
+                            <?php $repeat = Statistics::getRepeatedToday($item->id)?>
+                            @if(Statistics::checkCountDays($item->id)) <a
+                                href="{{ route('statistic.diagram.small', ['language_id' => $item->id, 'type' => 'repeated', 'period' => 20]) }}"
+                                class="link"> @endif
+                                @if($repeat > 0) <b> @endif
+                                    <span>Повторено сегодня: <span
+                                            class="@if($repeat > 0) b text-danger @endif">{{ $repeat }}</span></span>
+                                    @if($repeat > 0) </b> @endif
+                                @if(Statistics::checkCountDays($item->id)) </a> @endif
                         </div>
 
-                        <div class="col-lg-3">
-                        <span>Прочитано раз: </span>  <span class="b text-primary">{{ \App\Models\Statistics::getReadTotal($item->id) }}</span>
+
+                        <div class="col-lg-3 myStatBlock1">
+                            <?php $readed = \App\Models\Statistics::getReadTotal($item->id)?>
+                            @if(Statistics::checkCountDays($item->id, $middleDays)) <a
+                                href="{{ route('statistic.diagram.small', ['language_id' => $item->id, 'type' => 'repeated', 'period' => 100]) }}"
+                                class="link"> @endif
+                                <span>Прочитано раз: </span> <span
+                                    class="@if($readed > 0) b text-primary @endif">{{ $readed }}</span>
+                                @if(Statistics::checkCountDays($item->id, $middleDays)) </a> @endif
+                            <br>
+                            <?php $read = Statistics::getReadToday($item->id)?>
+                            @if(Statistics::checkCountDays($item->id)) <a
+                                href="{{ route('statistic.diagram.small', ['language_id' => $item->id, 'type' => 'repeated', 'period' => 20]) }}"
+                                class="link"> @endif
+                                @if($read > 0) <b> @endif
+                                    <span>Прочитано сегодня: </span> <span
+                                        class="@if($read > 0) b text-danger @endif">{{ $read }}</span>
+                                    @if($read > 0) </b> @endif
+                                @if(Statistics::checkCountDays($item->id)) </a> @endif
                         </div>
 
-                        <div class="col-lg-3">
-                            <span>Словарный запас: </span>  <span class="b text-primary">{{ \App\Models\Dictionary::getForLanguageAll($item->id)->count() }}</span>
+                        <div class="col-lg-3 myStatBlock1">
+                            <?php $words = \App\Models\Dictionary::getForLanguageAll($item->id)->count()?>
+                            @if(Statistics::checkCountDays($item->id, $middleDays)) <a
+                                href="{{ route('statistic.diagram.small', ['language_id' => $item->id, 'type' => 'created', 'period' => 100]) }}"
+                                class="link"> @endif
+                                <span>Словарный запас: </span> <span
+                                    class="@if($words > 0) b text-primary @endif">{{ $words }}</span>
+                                @if(Statistics::checkCountDays($item->id, $middleDays)) </a> @endif
+                            <br>
+                            <?php $wordsToday = Statistics::getNewWordsToday($item->id)?>
+                            @if(Statistics::checkCountDays($item->id)) <a
+                                href="{{ route('statistic.diagram.small', ['language_id' => $item->id, 'type' => 'created', 'period' => 20]) }}"
+                                class="link">@endif
+                                @if($wordsToday > 0) <b> @endif
+                                    <span>Добавлено сегодня: </span> <span
+                                        class="@if($wordsToday > 0) b text-danger @endif">{{ $wordsToday }}</span>
+                                    @if($wordsToday > 0) </b> @endif
+                                @if(Statistics::checkCountDays($item->id))</a> @endif
+                        </div>
+
+                        <div class="col-lg-12 myStatBlock1">
+                            <?php
+                            $timeAll = \App\Models\Time::getAllTimes($item->id);
+                            $timeToday = \App\Models\Time::getTimeToday($item->id);
+                            $timeAllHMS = \App\Models\Time::getHMS($timeAll->sum('time'));
+                            ?>
+                                @if(\App\Models\Time::checkCountDays($item->id, $middleDays)) <a
+                                href="{{ route('statistic.diagram.time', ['language_id' => $item->id, 'period' => 100]) }}"
+                                class="link"><b> @endif
+                                    <span>Общее количество времени на изучение: <span class="
+                            @if($timeAll->sum('time') > 0) b text-primary @endif">
+                                   &nbsp; {{ $timeAllHMS['hours'] . ' : ' . $timeAllHMS['minutes'] . ' : ' . $timeAllHMS['seconds']  }}
+                                </span></span>
+                                        @if(\App\Models\Time::checkCountDays($item->id, $middleDays)) </b></a> @endif
+                            &nbsp; &nbsp;
+                            @if($timeAll) <a
+                                href="{{ route('statistic.diagram.time', ['language_id' => $item->id, 'period' => 20]) }}"
+                                class="link"> @endif
+
+                                @if($timeToday) <b> @endif
+                                    Сегодня времени потрачено:
+                                    @if($timeToday)
+                                        &nbsp; <span class="
+                                            @if($timeAll->sum('time') > 0) b text-danger @endif">{{ $timeToday['hours'] . ' : ' . $timeToday['minutes'] . ' : ' . $timeToday['seconds']  }}</span>
+                                    @else
+                                        <?php $timeToday = \App\Models\Time::getHMS(0);?>
+                                        &nbsp; <span
+                                            class=" @if($timeAll->sum('time') > 0) b text-danger @endif">{{ $timeToday['hours'] . ' : ' . $timeToday['minutes'] . ' : ' . $timeToday['seconds']  }}</span>
+                                    @endif
+                                    @if($timeToday) </b> @endif
+                                @if($timeAll) </a> @endif
+
+
                         </div>
                     </div>
                 </div>
-            <hr>
+                <hr>
             @endforeach
         </div>
 

@@ -71,6 +71,38 @@ class SectionController extends Controller
     }
 
 
+    public function deleteCheck($section_id)
+    {
+        $model = Phrase::getModel();
+        $phrases = $model->where('user_id', auth()->id())
+            ->where('section_id', '=', $section_id)
+            ->get();
+        if(!$phrases->isEmpty()) {
+            foreach($phrases as $phrase):
+                $phrase->status = 0;
+                $phrase->save();
+            endforeach;
+        }
+        return redirect()->route('section.show', ['section' => $section_id]);
+    }
+
+
+    public function addCheck($section_id)
+    {
+        $model = Phrase::getModel();
+        $phrases = $model->where('user_id', auth()->id())
+            ->where('section_id', '=', $section_id)
+            ->get();
+        if(!$phrases->isEmpty()) {
+            foreach($phrases as $phrase):
+                $phrase->status = 1;
+                $phrase->save();
+            endforeach;
+        }
+        return redirect()->route('section.show', ['section' => $section_id]);
+    }
+
+
     public function destroy($id)
     {
         dd(__METHOD__);

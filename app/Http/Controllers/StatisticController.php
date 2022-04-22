@@ -4,9 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Dictionary;
 use App\Models\Language;
-use App\Models\phrases\Phrase;
 use App\Models\Statistics;
-use Illuminate\Http\Request;
+use App\Models\Time;
 
 class StatisticController extends Controller
 {
@@ -18,73 +17,183 @@ class StatisticController extends Controller
     }
 
 
-    public function temp()
+    public function getDiagramSmall($language_id, $type, $period, $startAdd = null)
     {
-        //        ==========================================================
-//        $dictionary = Dictionary::getForLanguageAll(1);
-//        foreach($dictionary as $item):
-//            $date = date('Y-m-d', strtotime($item->created_at));
-//            $statistic = Statistics::firstOrNew(['user_id' => auth()->id(),
-//                'language_id' => 1, 'date' => $date]);
-//            $statistic->words++;
-//            $statistic->save();
-//        endforeach;
-//
-//        return 'yes';
-//        ----------------------------------------------------------
+        $language = Language::getOne($language_id);
+        if($type == 'created') {
+            $typeArray = ['created', 'words'];
+            $words1 = 'добавления новых фраз';
+            $words2 = 'добавления новых слов';
+            $color = [
+                'color1' => 'rgb(255, 99, 132)',
+                'color2' => 'rgb(153, 102, 255)',
+                'background1' => 'rgba(255, 99, 132, 0.2)',
+                'background2' => 'rgba(153, 102, 255, 0.2)',
+            ];
+        }
 
-        $model = Phrase::getModel();
-        $phrases = $model->where('user_id', auth()->id())
-            ->where('language_id', '=', 1)
-            ->orderBy('created_at', 'asc')
-            ->get();
-        $startDate = date('Y-m-d', strtotime($phrases[0]->created_at));
-        $lastPhrase = $phrases[count($phrases) - 1];
+        if($type == 'repeated') {
+            $typeArray = ['repeated', 'readed'];
+            $words1 = 'повторения фраз';
+            $words2 = 'чтения фраз';
+            $color = [
+                'color1' => 'rgb(54, 162, 235)',
+                'color2' => 'rgb(255, 159, 64)',
+                'background1' => 'rgba(54, 162, 235, 0.2)',
+                'background2' => 'rgba(255, 159, 64, 0.2)',
+            ];
+        }
+        $all = false;
 
-        // Цикл для занесения данных количества фраз в таблицу статистики
-        $i = $startDate;
-        $endDate = date('Y-m-d', strtotime($phrases[count($phrases) - 1]->created_at));
-        $sum = 0;
-        while ($i <= $endDate):
-            $from = $i . ' 00:00:00';
-            $to = $i . ' 23:59:59';
-            $countPhrases = $model->whereBetween('created_at', [$from, $to])->count();
-            if ($countPhrases > 0) {
-                $statistic = Statistics::firstOrNew(['user_id' => auth()->id(),
-                    'language_id' => 1, 'date' => $i]);
-                $statistic->created = $countPhrases;
-                $statistic->save();
-            }
-            // Приращение цикла
-            $sum = $sum + $countPhrases;
-            $i = date('Y-m-d', strtotime("+1 day", strtotime($i)));
-        endwhile;
+        if($period == 100) {
+            $step = 7;
+            $start = date('Y-m-d', strtotime($period . ' days ago', time()));
+            $end = date('Y-m-d', time());
+        }
+
+        if($period <= 25) {
+            $period = $period - 1;
+            $step = 1;
+            $start = date('Y-m-d', strtotime($period . ' days ago', time()));
+            $end = date('Y-m-d', time());
+        }
+
+        if($period == 500) {
+           $val = Statistics::calculateStartAndEnd($language_id);
+           $start = $val['start'];
+           $end = $val['end'];
+           $step = $val['period'];
+           $all = true;
+        }
 
 
-        $statistics = Statistics::all();
-        dd($statistics->sum('created'));
+        if($startAdd) {
+            $start = date('Y-m-d', strtotime($period . ' days ago', strtotime($startAdd)));
+            $end = $startAdd;
+        }
 
+        $array1 = $this->getArraysForDiagrams($start, $end, $language_id, $typeArray[0], $step, $all);
+        $array2 = $this->getArraysForDiagrams($start, $end, $language_id, $typeArray[1], $step, $all);
+
+        $count1 = $array1['count'];
+        $count2 = $array2['count'];
+        $dates1 = $array1['date'];
+        $dates2 = $array2['date'];
+        $countProgress1 = $this->arrayProgress($array1['count']);
+        $countProgress2 = $this->arrayProgress($array2['count']);
+
+        if($period <= 25) {
+            $period = $period + 1;
+        }
+
+        $scheduleValue = [
+            'name1' => 'Прогрессивный график '.$words1.' за ' . $period . ' последних дней',
+            'name2' => 'Прогрессивный график '.$words2.' за ' . $period . ' последних дней',
+            'progressName1' => 'График ' .$words1. ' за ' . $period . ' последних дней',
+            'progressName2' => 'График ' .$words2. ' за ' . $period . ' последних дней',
+            'title' => "Статистика $words1 и $words2 за $period последних дней",
+        ];
+
+        if($period == 500) {
+            $scheduleValue = [
+                'name1' => 'Прогрессивный график '.$words1.' за все время изучения',
+                'name2' => 'Прогрессивный график '.$words2.' за все время изучения',
+                'progressName1' => 'График ' .$words1. ' за все время изучения',
+                'progressName2' => 'График ' .$words2. ' за все время изучения',
+                'title' => "Статистика $words1 и $words2 за все время изучения",
+            ];
+        }
+
+        if($startAdd == null) {
+            $startAdd = $start;
+        } else {
+            $startAdd = $start;
+        }
+
+        $middleDays = 30;
+        $maxDays = 100;
+        return view('statistic.diagram-small',
+            compact('countProgress1', 'countProgress2', 'count1', 'count2',
+                'dates1', 'dates2', 'scheduleValue', 'period', 'language_id', 'language', 'type',
+                'color', 'startAdd', 'middleDays', 'maxDays'));
     }
 
 
-    public function getDiagramType1($language_id, $type)
+    public function getDiagramTime($language_id, $period, $startAdd = null)
     {
-        $period = 100;
-        $start = date('Y-m-d', strtotime($period . ' days ago', time()));
-        $end = date('Y-m-d', time());
+        $language = Language::getOne($language_id);
 
-        $arraysCreated = $this->getArraysForDiagrams($start, $end, $language_id, $type, 7);
-        $count = $arraysCreated['count'];
-        $dates = $arraysCreated['date'];
-        $countProgress = $this->arrayProgress($arraysCreated['count']);
-
-        $scheduleValue = [
-            'name' => 'Прогрессивный график добавления новых фраз за ' . $period . ' дней',
-            'progressName' => 'График добавления новых фраз за ' . $period . ' дней',
-
+        $color = [
+            'color1' => '#ff4500',
+            'background1' => '#ffdead',
         ];
 
-        return view('statistic.diagram-1', compact('countProgress', 'count', 'dates', 'scheduleValue', 'period'));
+        if($period == 100) {
+            $step = 7;
+            $start = date('Y-m-d', strtotime($period . ' days ago', time()));
+            $end = date('Y-m-d', time());
+        }
+
+        if($period <= 25) {
+            $period = $period - 1;
+            $step = 1;
+            $start = date('Y-m-d', strtotime($period . ' days ago', time()));
+            $end = date('Y-m-d', time());
+        }
+        $all = false;
+        if($period == 500) {
+            $val = Statistics::calculateStartAndEnd($language_id);
+            $start = $val['start'];
+            $end = $val['end'];
+            $step = $val['period'];
+            $all = true;
+        }
+
+        if($startAdd) {
+            $start = date('Y-m-d', strtotime($period . ' days ago', strtotime($startAdd)));
+            $end = $startAdd;
+        }
+
+        $array1 = Time::getArraysForDiagrams($start, $end, $language_id, $step, $all);
+
+        $count1 = $array1['count'];
+        $dates1 = $array1['date'];
+        $middle = $array1['middle'];
+
+//        dd(Time::getHMS($middle));
+
+        $countProgress1 = $this->arrayProgress($array1['count']);
+
+
+        if($period <= 25) {
+            $period = $period + 1;
+        }
+
+        $scheduleValue = [
+            'name1' => 'Прогрессивный график затраченного времени за ' . $period . ' последних дней',
+            'progressName1' => 'График затраченного времени за ' . $period . ' последних дней',
+            'title' => "Статистика затраченного времени за $period последних дней",
+        ];
+
+        if($period == 500) {
+            $scheduleValue = [
+                'name1' => 'Прогрессивный график затраченного времени за все время изучения',
+                'progressName1' => 'График затраченного времени за все время изучения',
+                'title' => "Статистика затраченного времени за все время изучения",
+            ];
+        }
+
+        if($startAdd == null) {
+            $startAdd = $start;
+        } else {
+            $startAdd = $start;
+        }
+
+        $middleDays = 30;
+        $maxDays = 100;
+        return view('statistic.diagram-time',
+            compact('countProgress1', 'count1', 'dates1', 'scheduleValue', 'period', 'language_id',
+                'language', 'color', 'startAdd', 'middleDays', 'maxDays', 'middle'));
     }
 
 
@@ -98,12 +207,11 @@ class StatisticController extends Controller
                 $progress[$i] = $array[$i] + $progress[$i - 1];
             }
         endfor;
-
             return $progress;
     }
 
 
-    private function getArraysForDiagrams($start, $end, $language_id, $type, $daysAdd)
+    private function getArraysForDiagrams($start, $end, $language_id, $type, $daysAdd, $all)
     {
         $i = $start;
         $countArray = [];
@@ -111,13 +219,21 @@ class StatisticController extends Controller
         $num = 0;
         while ($i <= $end):
             $nextDate = date('Y-m-d', strtotime('+' . $daysAdd . ' days', strtotime($i)));
-            if($num > 0) $i = date('Y-m-d', strtotime('+1 day', strtotime($i)));
-
-            $items = Statistics::where('user_id', auth()->id())->where('language_id', '=', $language_id)
-                ->whereBetween('date', [$i, $nextDate])->get();
+            if($num > 0 && $daysAdd > 1) $i = date('Y-m-d', strtotime('+1 day', strtotime($i)));
+//            dd($i);
+            if($daysAdd === 1) {
+                $items = Statistics::where('user_id', auth()->id())->where('language_id', '=', $language_id)
+                    ->where('date', '=', $i)->get();
+            } else {
+                $items = Statistics::where('user_id', auth()->id())->where('language_id', '=', $language_id)
+                    ->whereBetween('date', [$i, $nextDate])->get();
+            }
 
             $countArray[$num] = $items->sum($type);
-            $dateArray[$num] = $nextDate;
+            $dateArray[$num] = date('dM', strtotime($i));
+            if($all) {
+                $dateArray[$num] = date('d.My', strtotime($i));
+            }
 
             $i = $nextDate;
             $num++;
@@ -158,7 +274,6 @@ class StatisticController extends Controller
             $nexDate = date('Y-m-d', strtotime("+1 week", strtotime($i)));
             $from = $i . ' 00:00:00';
             $before = $nexDate . ' 00:00:00';
-//            dd($from, $before);
             $count = $dictionary->whereBetween('created_at', [$from, $before])->count();
             $countWordsForWeek[$num] = $count;
             if (isset($countWordsForWeek[$num - 1])) {

@@ -23,4 +23,8 @@
     .floatRight {
         float: left;
     }
+
+    .myStatBlock1 {
+        margin-top: 1.5em;
+    }
 }

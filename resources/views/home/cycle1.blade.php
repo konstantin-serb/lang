@@ -1,4 +1,5 @@
-<div class="row">
+
+<div class="row newString @if(date('d-m-Y', $item->status) ==  date('d-m-Y', time())) nowadays @endif">
     <div class="col-lg-10 " style="font-size: 1.1em;">
         <a class="link" href="{{ route('section.show', ['section' => $item->id]) }}"
            style="font-weight: bold;">
@@ -43,4 +44,4 @@
         </span>
     </div>
 </div>
-<hr style="margin-top:0.2em; margin-bottom: 0.2em;">
+{{--<hr style="margin-top:0.2em; margin-bottom: 0.2em;">--}}

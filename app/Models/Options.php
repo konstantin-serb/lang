@@ -60,6 +60,8 @@ class Options extends Model
             $remember = 'last_sections_learn';
         } elseif($task == 2) {
             $remember = 'last_sections_read';
+        } elseif($task == 3) {
+            $remember = 'last_section_add';
         }
 
         if($options->$remember) {
