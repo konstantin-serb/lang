@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', $title = 'Редактирование раздела')
+@section('title', $title = __('messages.sections.section_editing'))
 @section('content')
 
 
@@ -39,7 +39,7 @@
             style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);"
             aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('language.index') }}">Языки</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('language.index') }}">{{ __('messages.main.languages') }}</a></li>
                 <li class="breadcrumb-item"><a
                         href="{{ route('language.show', ['language' => $section->language->id]) }}">{{ $section->language->title }}</a>
                 </li>
@@ -61,7 +61,10 @@
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="mt-3">
-                                    <label class="mb-2">Название раздела</label>
+                                    <label class="mb-2">
+{{--                                        Название раздела--}}
+                                        {{ __('messages.sections.sect_name') }}
+                                    </label>
                                     <input class="form-control @error('title') is-invalid @enderror" name="title"
                                            value="{{ old('title', $section->title) }}">
                                     @error('title')
@@ -72,7 +75,10 @@
 
                             <div class="col-lg-6">
                                 <div class="mt-3">
-                                    <label class="mb-2">Родительская категория</label>
+                                    <label class="mb-2">
+{{--                                        Родительская категория--}}
+                                        {{ __('messages.sections.parent_category') }}
+                                    </label>
                                     <select class="form-select" name="parent_id">
                                         <?php getDaughtersCategory($allSections, $section)?>
                                     </select>
@@ -84,7 +90,10 @@
 
                             <div class="col-lg-6">
                                 <div class="mt-3">
-                                    <label class="mb-2">Комментарий, описание</label>
+                                    <label class="mb-2">
+{{--                                        Комментарий, описание--}}
+                                        {{ __('messages.sections.comment') }}
+                                    </label>
                                     <textarea class="form-control @error('description') is-invalid @enderror"
                                               name="description">
                                 {{ old('description', $section->description) }}
@@ -99,12 +108,21 @@
                         </div>
 
                         <div class="btn-group mt-4">
-                            <button type="submit" class="btn btn-outline-primary">Изменить</button>
+                            <button type="submit" class="btn btn-outline-primary">
+{{--                                    Изменить--}}
+                                {{ __('messages.main.change') }}
+                            </button>
                             <a class="btn btn-outline-danger" href="
 {{--{{ route('section.delete', ['section' => $section->id]) }}--}}
-                                ">Удалить</a>
+                                ">
+{{--                                Удалить--}}
+                                {{ __('messages.main.delete') }}
+                            </a>
                             <a class="btn btn-outline-secondary"
-                               href="{{ route('section.show', ['section' => $section->id]) }}">Отмена</a>
+                               href="{{ route('section.show', ['section' => $section->id]) }}">
+{{--                                Отмена--}}
+                                {{ __('messages.main.cancel') }}
+                            </a>
                         </div>
                     </form>
                 </div>

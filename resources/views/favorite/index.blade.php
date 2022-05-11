@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', $title = 'Избранное')
+@section('title', $title = __('messages.main.favorite'))
 @push('bottom')
     <script src="/js/jquery.js"></script>
     <script src="/js/changeComplexity.js"></script>
@@ -11,7 +11,7 @@
             style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);"
             aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('home') }}">Главная</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('home') }}">{{ __('messages.main.main') }}</a></li>
                 <li class="breadcrumb-item"><a href="{{ route('language.show', ['language' => $language->id]) }}">{{ $language->title }}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">{{ $title }}</li>
             </ol>
@@ -20,35 +20,97 @@
 
         <h2 class="b">{{ $title }}</h2>
 
-        <h4>У вас в избранном {{ $phrases->count() }} предложений</h4>
+        <h4>
+{{--            У вас в избранном {{ $phrases->count() }} предложений--}}
+            @lang('messages.favorite.count_lines', ['n' => $phrases->count()])
+        </h4>
+        <h6>
+{{--            В данном разделе отображаются только те предложения, которые входят в язык по умолчанию--}}
+            @lang('messages.favorite.display_default'). @if($languageDefault)
+{{--                У вас назначен язык по умолчанию--}}
+                @lang('messages.favorite.you_have_default')
+                : <b>{{ $languageDefault->title }}</b>
+            @else
+{{--                У вас не назначен язык по умолчанию--}}
+                @lang('messages.favorite.you_dont_have_default')
+            @endif
+
+            @if(!$languages->isEmpty())
+
+                <br>
+
+
+                {{--            Назначение языка по умолчанию--}}
+                <a href="#" type="link" class="myLink" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    @if($languageDefault)
+{{--                        Вы можете изменить ваш язык по умолчанию--}}
+                        @lang('messages.favorite.you_can_change')
+                    @else
+{{--                        Назначить язык по умолчанию--}}
+                        @lang('messages.favorite.set_default_lagn')
+                    @endif
+                </a>
+                <?php $page = 'favorite'?>
+                @include('home.parts.changeDefaultLanguage')
+
+            @else
+                <h4>
+{{--                    У вас нет пока ни одного изучаемого языка--}}
+                    @lang('messages.home.no_any_languages')
+                </h4>
+                <a class="btn btn-primary mt-3" href="{{ route('language.create') }}">
+{{--                    Добавить язык--}}
+                    @lang('messages.home.add_language')
+                </a>
+
+            @endif
+        </h6>
 
     @if(!$phrases->isEmpty())
+        <br>
         <!-- Button trigger modal -->
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                Очистить избранное
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal2">
+{{--                Очистить избранное--}}
+                @lang('messages.favorite.clear')
             </button>
-            <span style="margin-left: 1em;">Удалить все предложения из избранного (эти фразы останутся в разделах)</span>
+            <span style="margin-left: 1em;">
+{{--                Удалить все предложения из избранного (эти фразы останутся в разделах)--}}
+                @lang('messages.favorite.delete_all_sentence')
+            </span>
             <br><hr>
     @endif
     <!-- Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Очистить избранное</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">
+{{--                            Очистить избранное--}}
+                            @lang('messages.favorite.clear')
+                        </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <h4 class="b">Очистить избранное</h4>
+                        <h4 class="b">
+{{--                            Очистить избранное--}}
+                            @lang('messages.favorite.clear')
+                        </h4>
                         <div>
-                            Здесь вы можете очистить избранное одним кликом. Фразы будут удалены из избранного, но останутся в
-                            тех же разделах
+{{--                            Здесь вы можете очистить избранное одним кликом. Фразы будут удалены из избранного, но останутся в--}}
+{{--                            тех же разделах--}}
+                            @lang('messages.favorite.here_can_clear')
                             <br>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
-                        <a href="{{ route('favorite.clear', ['language_id' => $language->id]) }}" class="btn btn-primary">Очистить избранное</a>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+{{--                            Отмена--}}
+                            @lang('messages.main.cancel')
+                        </button>
+                        <a href="{{ route('favorite.clear', ['language_id' => $language->id]) }}" class="btn btn-primary">
+{{--                            Очистить избранное--}}
+                            @lang('messages.favorite.clear')
+                        </a>
 
                     </div>
                 </div>
@@ -63,7 +125,10 @@
         <div class="row">
             <div class="col-lg-2">
                 <div class="">
-                    <label class="mb-2">К-во циклов</label>
+                    <label class="mb-2">
+{{--                        К-во циклов--}}
+                        {{ __('messages.sections.count_cycles') }}
+                    </label>
                     <select class="form-select" name="cycles" id="countCycles">
                         <option value="1" selected>1</option>
                         <option value="2">2</option>
@@ -77,23 +142,37 @@
 
             <div class="col-lg-2">
                 <div class="">
-                    <label class="mb-2">Задача</label>
+                    <label class="mb-2">
+{{--                        Задача--}}
+                        {{ __('messages.sections.task') }}
+                    </label>
                     <select class="form-select" name="task" id="task">
-                        <option value="1" selected >Учить</option>
-                        <option value="2" >Читать</option>
+                        <option value="1" selected >
+{{--                            Учить--}}
+                            {{ __('messages.sections.learn') }}
+                        </option>
+                        <option value="2" >
+{{--                            Читать--}}
+                        {{ __('messages.sections.read') }}
+                        </option>
                     </select>
                 </div>
             </div>
 
             <div class="col-lg-2">
                 <div class="">
-                    <label class="mb-2">Лимит</label>
+                    <label class="mb-2">
+{{--                        Лимит--}}
+                        {{ __('messages.sections.limit') }}
+                    </label>
                     <input class="form-control" name="limit" value="300" id="limit">
                 </div>
             </div>
 
             <div class="col-lg-2 " style="margin-top:2.2em;">
-                <a id="buttonChoose" href="#" class="btn btn-warning ">&nbsp;Учить!&nbsp;</a>
+                <a id="buttonChoose" href="#" class="btn btn-warning ">&nbsp;
+{{--                    Учить--}}
+                    {{ __('messages.sections.learn') }}!&nbsp;</a>
             </div>
 
         </div>

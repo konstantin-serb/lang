@@ -144,6 +144,7 @@ class Phrase extends Model
     {
         $model = self::getModel();
         $phrases = $model->where('user_id', '=', auth()->id())
+            ->where('language_id', '=', $languages_id)
             ->where('type', '=', 1)
             ->where('status', '=', 1)
             ->orderBy('updated_at', 'desc')

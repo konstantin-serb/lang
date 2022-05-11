@@ -18,7 +18,7 @@
                 <li class="breadcrumb-item"><a
                         href="{{ route('language.show', ['language' => $language_id]) }}">{{ $language->title }}</a>
                 </li>
-                <li class="breadcrumb-item"><a href="{{ route('statistic') }}">Статистика</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('statistic') }}">@lang('messages.statistic.statistic')</a></li>
                 <li class="breadcrumb-item active" aria-current="page">{{$title}}</li>
             </ol>
         </nav>
@@ -33,39 +33,61 @@
             @if($period == 20)
                 @if(\App\Models\Time::checkCountDays($language_id, $middleDays))
                     <a href="{{ route('statistic.diagram.time', ['language_id' => $language_id, 'period' => 100]) }}"
-                       class="btn btn-primary">Диаграмма за 100 дней</a>
+                       class="btn btn-primary">
+{{--                        Диаграмма за 100 дней--}}
+                        @lang('messages.statistic.diagram_for_n_days', ['n' => 100])
+                    </a>
                 @endif
 
                     <a href="{{ route('statistic.diagram.small', ['language_id' => $language_id, 'type' => 'repeated', 'period' => $period]) }}"
-                       class="btn btn-warning">Диаграмма повторения и чтения</a>
+                       class="btn btn-warning">
+{{--                        Диаграмма повторения и чтения--}}
+                        @lang('messages.statistic.graph_repetition_and_reading')
+                    </a>
 
                     <a href="{{ route('statistic.diagram.small', ['language_id' => $language_id, 'type' => 'created', 'period' => 20]) }}"
-                       class="btn btn-warning">Диаграмма фраз и слов</a>
+                       class="btn btn-warning">
+{{--                        Диаграмма фраз и слов--}}
+                        @lang('messages.statistic.phrase_graph')
+                    </a>
 
                     <a href="{{ route('statistic.diagram.time', ['language_id' => $language_id, 'period' => $period, 'startAdd' => $startAdd]) }}" class="btn btn-success">
-                        Еще за {{ $period }} дней
+{{--                        Еще за {{ $period }} дней--}}
+                        @lang('messages.statistic.more_days', ['n' => $period])
                     </a>
 
                 @if(\App\Models\Time::checkCountDays($language_id, $maxDays))
                     {{--                    //показ кнопки за все время--}}
                         <a href="{{ route('statistic.diagram.time', ['language_id' => $language_id, 'period' => 500]) }}"
-                           class="btn btn-info lastButton" >За все время</a>
+                           class="btn btn-info lastButton" >
+{{--                            За все время--}}
+                            @lang('messages.statistic.for_all_time')
+                        </a>
                     {{--                    //конец кнопки за все время--}}
                 @endif
 
                 @elseif($period == 100)
                     <a href="{{ route('statistic.diagram.time', ['language_id' => $language_id, 'period' => 20]) }}"
-                       class="btn btn-primary">Диаграмма за 20 дней</a>
+                       class="btn btn-primary">
+{{--                        Диаграмма за 20 дней--}}
+                        @lang('messages.statistic.diagram_for_n_days', ['n' => 20])
+                    </a>
 
                 @if(\App\Models\Time::checkCountDays($language_id, $maxDays))
                 <a href="{{ route('statistic.diagram.time', ['language_id' => $language_id, 'period' => $period, 'startAdd' => $startAdd]) }}"
-                   class="btn btn-success">Еще за {{ $period }} дней</a>
+                   class="btn btn-success">
+{{--                    Еще за {{ $period }} дней--}}
+                    @lang('messages.statistic.more_days', ['n' => $period])
+                </a>
                 @endif
 
                 @if(\App\Models\Time::checkCountDays($language_id, $maxDays))
                     {{--                    //показ кнопки за все время--}}
                     <a href="{{ route('statistic.diagram.time', ['language_id' => $language_id, 'period' => 500]) }}"
-                       class="btn btn-info lastButton" >За все время</a>
+                       class="btn btn-info lastButton" >
+{{--                        За все время--}}
+                        @lang('messages.statistic.for_all_time')
+                    </a>
                     {{--                    //конец кнопки за все время--}}
                 @endif
 
@@ -74,7 +96,9 @@
         </div>
         <?php $middleTime = \App\Models\Time::getHMS($middle);?>
         <div>
-            <span class="text-danger">В среднем в день времени: {{ $middleTime['hours'] . ' : ' . $middleTime['minutes'] . ' : ' . $middleTime['seconds'] }}</span>
+            <span class="text-danger">
+{{--                В среднем в день времени--}}
+                @lang('messages.statistic.per_day_time'): {{ $middleTime['hours'] . ' : ' . $middleTime['minutes'] . ' : ' . $middleTime['seconds'] }}</span>
         </div>
 
         <h2 class="b mb-4">{{ $title }}: {{ $language->title }}</h2>

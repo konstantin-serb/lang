@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', $title = 'Чтение по слову')
+@section('title', $title = __('messages.train.read_in_word'))
 @push('bottom')
     <script src="/js/jquery.js"></script>
     <script src="/js/readPhrase.js"></script>
@@ -10,7 +10,7 @@
     <div class="container">
         <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('language.index') }}">Языки</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('language.index') }}">{{ __('messages.main.languages') }}</a></li>
                 <li class="breadcrumb-item"><a href="{{ route('language.show', ['language' => $language->id]) }}">{{ $language->title }}</a></li>
 
             </ol>
@@ -23,7 +23,7 @@
         </form>
 
         <hr>
-        <span class=" h5">Сгененировано <span class="b">{{ count($endCollection) }}</span> строк</span>
+        <span class=" h5 b">{{ __('messages.train.generate', ['count' => count($endCollection)]) }}</span>
         @if(!$endCollection == null)
             <div class="h5 mt-5">
                 @foreach($endCollection as $key=>$value)

@@ -24,6 +24,16 @@ class Options extends Model
         }
     }
 
+    public static function getLocate()
+    {
+        $options = self::getOptions();
+        if($options->lang) {
+            return $options->lang;
+        } else {
+            return 'en';
+        }
+    }
+
     public static function addPhrase($id)
     {
         $countMembers = 100;

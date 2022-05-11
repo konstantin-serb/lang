@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', $title = 'Результаты поиска')
+@section('title', $title = __('messages.train.search_results'))
 @push('bottom')
     <script src="/js/jquery.js"></script>
     <script src="/js/changeComplexity.js"></script>
@@ -11,8 +11,8 @@
             style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);"
             aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('home') }}">Главная</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('train.index') }}">Тренировка</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('home') }}">{{ __('messages.train.home') }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('train.index') }}">{{ __('messages.train.train') }}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">{{ $title }}</li>
             </ol>
         </nav>
@@ -26,7 +26,10 @@
         <div class="row">
             <div class="col-lg-2">
                 <div class="">
-                    <label class="mb-2">К-во циклов</label>
+                    <label class="mb-2">
+{{--                        К-во циклов--}}
+                        {{ __('messages.sections.count_cycles') }}
+                    </label>
                     <select class="form-select" name="cycles" id="countCycles">
                         <option value="1" selected>1</option>
                         <option value="2">2</option>
@@ -40,23 +43,37 @@
 
             <div class="col-lg-2">
                 <div class="">
-                    <label class="mb-2">Задача</label>
+                    <label class="mb-2">
+{{--                        Задача--}}
+                        {{ __('messages.sections.task') }}
+                    </label>
                     <select class="form-select" name="task" id="task">
-                        <option value="1" @if($task == 1) selected @endif>Учить</option>
-                        <option value="2" @if($task == 2) selected @endif>Читать</option>
+                        <option value="1" @if($task == 1) selected @endif>
+{{--                            Учить--}}
+                            {{ __('messages.sections.learn') }}
+                        </option>
+                        <option value="2" @if($task == 2) selected @endif>
+{{--                            Читать--}}
+                            {{ __('messages.sections.read') }}
+                        </option>
                     </select>
                 </div>
             </div>
 
             <div class="col-lg-2">
                 <div class="">
-                    <label class="mb-2">Лимит</label>
+                    <label class="mb-2">
+{{--                        Лимит--}}
+                        {{ __('messages.sections.limit') }}
+                    </label>
                     <input class="form-control" name="limit" value="300" id="limit">
                 </div>
             </div>
 
             <div class="col-lg-2 " style="margin-top:2.2em;">
-                <a id="buttonChoose" href="#" class="btn btn-warning ">&nbsp;Учить!&nbsp;</a>
+                <a id="buttonChoose" href="#" class="btn btn-warning ">&nbsp;
+{{--                    Учить--}}
+                    {{ __('messages.sections.learn') }}!&nbsp;</a>
             </div>
 
         </div>
@@ -92,7 +109,7 @@
                                             style="color: rgba(228,0,0,0.51);">({{$phrase->getCountReading()}})</span></span>
                                 <div class="form-check form-check-inline"
                                      style="margin: 0.01em; padding-right: 0.1em; padding-left: 0.7em;">
-                                    <input class="form-check-input" title="легкий" type="radio"
+                                    <input class="form-check-input" title="{{ __('messages.sections.easy') }}" type="radio"
                                            data-id="{{ $phrase->id }}" data-type="1"
                                            name="inlineRadioOptions-{{ $phrase->id }}"
                                            id="inlineRadio-1-{{$phrase->id}}" value="option1"
@@ -100,7 +117,7 @@
                                 </div>
                                 <div class="form-check form-check-inline"
                                      style="margin: 0.01em; padding-right: 0.1em; padding-left: 0.7em;">
-                                    <input class="form-check-input" title="средний" type="radio"
+                                    <input class="form-check-input" title="{{ __('messages.sections.medium') }}" type="radio"
                                            data-id="{{ $phrase->id }}" data-type="2"
                                            name="inlineRadioOptions-{{ $phrase->id }}"
                                            id="inlineRadio-2-{{$phrase->id}}" value="option2"
@@ -108,7 +125,7 @@
                                 </div>
                                 <div class="form-check form-check-inline"
                                      style="margin: 0.01em; padding-right: 0.1em; padding-left: 0.7em;">
-                                    <input class="form-check-input" title="сложный" type="radio"
+                                    <input class="form-check-input" title="{{ __('messages.sections.hard') }}" type="radio"
                                            data-id="{{ $phrase->id }}" data-type="3"
                                            name="inlineRadioOptions-{{ $phrase->id }}"
                                            id="inlineRadio-3-{{$phrase->id}}" value="option3"

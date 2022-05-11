@@ -22,8 +22,8 @@ class StatisticController extends Controller
         $language = Language::getOne($language_id);
         if($type == 'created') {
             $typeArray = ['created', 'words'];
-            $words1 = 'добавления новых фраз';
-            $words2 = 'добавления новых слов';
+            $words1 = __('messages.statistic.adding_new_phrases');
+            $words2 = __('messages.statistic.adding_new_words');
             $color = [
                 'color1' => 'rgb(255, 99, 132)',
                 'color2' => 'rgb(153, 102, 255)',
@@ -34,8 +34,8 @@ class StatisticController extends Controller
 
         if($type == 'repeated') {
             $typeArray = ['repeated', 'readed'];
-            $words1 = 'повторения фраз';
-            $words2 = 'чтения фраз';
+            $words1 = __('messages.statistic.repetition_of_phrases');
+            $words2 = __('messages.statistic.reading_of_phrases');
             $color = [
                 'color1' => 'rgb(54, 162, 235)',
                 'color2' => 'rgb(255, 159, 64)',
@@ -87,20 +87,30 @@ class StatisticController extends Controller
         }
 
         $scheduleValue = [
-            'name1' => 'Прогрессивный график '.$words1.' за ' . $period . ' последних дней',
-            'name2' => 'Прогрессивный график '.$words2.' за ' . $period . ' последних дней',
-            'progressName1' => 'График ' .$words1. ' за ' . $period . ' последних дней',
-            'progressName2' => 'График ' .$words2. ' за ' . $period . ' последних дней',
-            'title' => "Статистика $words1 и $words2 за $period последних дней",
+//            'name1' => 'Прогрессивный график '.$words1.' за ' . $period . ' последних дней',
+            'name1' => __('messages.statistic.progressive_graph', ['words1' => $words1, 'period' => $period]),
+//            'name2' => 'Прогрессивный график '.$words2.' за ' . $period . ' последних дней',
+            'name2' => __('messages.statistic.progressive_graph', ['words1' => $words2, 'period' => $period]),
+//            'progressName1' => 'График ' .$words1. ' за ' . $period . ' последних дней',
+            'progressName1' => __('messages.statistic.graph', ['words1' => $words1, 'period' => $period]),
+//            'progressName2' => 'График ' .$words2. ' за ' . $period . ' последних дней',
+            'progressName2' => __('messages.statistic.graph', ['words1' => $words2, 'period' => $period]),
+//            'title' => "Статистика $words1 и $words2 за $period последних дней",
+            'title' => __('messages.statistic.statistic_for_period', ['words1' => $words1, 'words2' => $words2, 'period' => $period]),
         ];
 
         if($period == 500) {
             $scheduleValue = [
-                'name1' => 'Прогрессивный график '.$words1.' за все время изучения',
-                'name2' => 'Прогрессивный график '.$words2.' за все время изучения',
-                'progressName1' => 'График ' .$words1. ' за все время изучения',
-                'progressName2' => 'График ' .$words2. ' за все время изучения',
-                'title' => "Статистика $words1 и $words2 за все время изучения",
+//                'name1' => 'Прогрессивный график '.$words1.' за все время изучения',
+                'name1' => __('messages.statistic.progressive_graph_all', ['words1' => $words1]),
+//                'name2' => 'Прогрессивный график '.$words2.' за все время изучения',
+                'name2' => __('messages.statistic.progressive_graph_all', ['words1' => $words2]),
+//                'progressName1' => 'График ' .$words1. ' за все время изучения',
+                'progressName1' => __('messages.statistic.graph_all', ['words1' => $words1]),
+//                'progressName2' => 'График ' .$words2. ' за все время изучения',
+                'progressName2' => __('messages.statistic.graph_all', ['words1' => $words2]),
+//                'title' => "Статистика $words1 и $words2 за все время изучения",
+                'title' => __('messages.statistic.statistic_all', ['words1' => $words1, 'words2' => $words2]),
             ];
         }
 
@@ -111,7 +121,7 @@ class StatisticController extends Controller
         }
 
         $middleDays = 30;
-        $maxDays = 100;
+        $maxDays = 50;
         return view('statistic.diagram-small',
             compact('countProgress1', 'countProgress2', 'count1', 'count2',
                 'dates1', 'dates2', 'scheduleValue', 'period', 'language_id', 'language', 'type',
@@ -170,16 +180,22 @@ class StatisticController extends Controller
         }
 
         $scheduleValue = [
-            'name1' => 'Прогрессивный график затраченного времени за ' . $period . ' последних дней',
-            'progressName1' => 'График затраченного времени за ' . $period . ' последних дней',
-            'title' => "Статистика затраченного времени за $period последних дней",
+//            'name1' => 'Прогрессивный график затраченного времени за ' . $period . ' последних дней',
+            'name1' => __('messages.statistic.progressive_graph_time', ['period' => $period]),
+//            'progressName1' => 'График затраченного времени за ' . $period . ' последних дней',
+            'progressName1' => __('messages.statistic.graph_time', ['period' => $period]),
+//            'title' => "Статистика затраченного времени за $period последних дней",
+            'title' => __('messages.statistic.statistic_time_for_period', ['period' => $period]),
         ];
 
         if($period == 500) {
             $scheduleValue = [
-                'name1' => 'Прогрессивный график затраченного времени за все время изучения',
-                'progressName1' => 'График затраченного времени за все время изучения',
-                'title' => "Статистика затраченного времени за все время изучения",
+//                'name1' => 'Прогрессивный график затраченного времени за все время изучения',
+                'name1' => __('messages.statistic.progressive_graph_time_all'),
+//                'progressName1' => 'График затраченного времени за все время изучения',
+                'progressName1' => __('messages.statistic.graph_time_all'),
+//                'title' => "Статистика затраченного времени за все время изучения",
+                'title' => __('messages.statistic.statistic_all_time'),
             ];
         }
 

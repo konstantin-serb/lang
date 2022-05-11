@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Новые слова за сегодня')
+@section('title', __('messages.dict.new_words_to_today'))
 @push('bottom')
     <script src="/js/jquery.js"></script>
     <script src="/js/checkWord.js"></script>
@@ -7,13 +7,16 @@
 
 @section('content')
 <div class="container">
-    <h2>Привет {{ auth()->user()->name }}!</h2>
+    <h2>{{ __('messages.home.hello') }} {{ auth()->user()->name }}!</h2>
 
     <div class="mt-3">
-        <a href="{{ route('dictionary.all', ['language_id' => $language->id]) }}" class="btn btn-success">Весь словарный запас</a>
+        <a href="{{ route('dictionary.all', ['language_id' => $language->id]) }}" class="btn btn-success">
+{{--            Весь словарный запас--}}
+            {{ __('messages.dict.all_vocabulary') }}
+        </a>
     </div>
     @if(!$wordsToday->isEmpty())
-    <h2 class="mt-4">Сегодня добавлено новых слов: {{$wordsToday->count()}}</h2>
+    <h2 class="mt-4">{{ __('messages.dict.count_new_words_today') }}: {{$wordsToday->count()}}</h2>
         @foreach($wordsToday as $word)
             <div class="row">
                 <div class="col-lg-2">

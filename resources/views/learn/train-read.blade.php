@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', $title = 'Упражнение по чтению')
+@section('title', $title = __('messages.train.read_exercise'))
 @push('bottom')
     <script src="/js/jquery.js"></script>
     <script src="/js/readPhrase.js"></script>
@@ -10,9 +10,9 @@
     <div class="container">
         <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('home') }}">Главная</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('train.index') }}">Тренировка</a></li>
-                <li class="breadcrumb-item"><a href="javascript:history.back()">Результаты поиска</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('home') }}">{{ __('messages.train.home') }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('train.index') }}">{{ __('messages.train.train') }}</a></li>
+                <li class="breadcrumb-item"><a href="javascript:history.back()">{{ __('messages.train.search_results') }}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">{{$title}}</li>
             </ol>
         </nav>
@@ -25,7 +25,7 @@
 
 
         <hr>
-        <span class=" h5">Сгененировано <span class="b">{{ count($endCollection) }}</span> строк</span>
+        <span class=" h5 b">{{ __('messages.train.generate', ['count' => count($endCollection)]) }}</span>
         @if(!$endCollection == null)
             <div class="h5 mt-5">
                 @foreach($endCollection as $key=>$value)

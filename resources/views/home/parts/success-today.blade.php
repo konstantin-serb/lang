@@ -4,7 +4,7 @@ use App\Models\Statistics;
 <div class="" style="background-color:rgba(244,255,0,0.26); margin-top:-1.2em; padding-top: 1em; padding-bottom: 1em; margin-bottom: 1em;">
     {{--<hr>--}}
     <div class="container">
-        <h4 class="b">Успехи за сегодня: </h4>
+        <h4 class="b">{{ __('messages.home.success_today') }}: </h4>
 
         @foreach($statistics as $statistic)
             <div class="mt-3">
@@ -12,19 +12,19 @@ use App\Models\Statistics;
                 <div class="row">
                     <div class="col-lg-3">
                         <?php $created = Statistics::getCreatedToday($statistic->language_id)?>
-                        Фраз добавлено: <span class="b" style="{{ Statistics::getColor($created) }}">{{ $created }}</span>
+                            {{ __('messages.home.phrases_added') }}: <span class="b" style="{{ Statistics::getColor($created) }}">{{ $created }}</span>
                     </div>
                     <div class="col-lg-3">
                         <?php $words = Statistics::getNewWordsToday($statistic->language_id)?>
-                        Новых слов добавлено: <span class="b" style="{{ Statistics::getColor($words) }}">{{ $words }}</span>
+                            {{ __('messages.home.new_words_added') }}: <span class="b" style="{{ Statistics::getColor($words) }}">{{ $words }}</span>
                     </div>
                     <div class="col-lg-3">
                         <?php $repeat = Statistics::getRepeatedToday($statistic->language_id)?>
-                        Повторено: <span class="b" style="{{ Statistics::getColor($repeat) }}">{{ $repeat }}</span>
+                            {{ __('messages.home.repeated') }}: <span class="b" style="{{ Statistics::getColor($repeat) }}">{{ $repeat }}</span>
                     </div>
                     <div class="col-lg-3">
                         <?php $read = Statistics::getReadToday($statistic->language_id)?>
-                        Прочитано: <span class="b" style="{{ Statistics::getColor($read) }}">{{ $read }}</span>
+                            {{ __('messages.home.read') }}: <span class="b" style="{{ Statistics::getColor($read) }}">{{ $read }}</span>
                     </div>
 
                 </div>
@@ -33,10 +33,10 @@ use App\Models\Statistics;
                     <hr>
                     <div class="row">
                         <div class="col-lg-12">
-                            Времени на обучение затрачено (ч:м:с):
-                                <b style="color: blue">{{ $time['hours'] }}</b>
+                            {{ __('messages.home.time_to_study') }}:
+                                <nobr><b style="color: blue">{{ $time['hours'] }}</b>
                                 : <b style="color: blue">{{ $time['minutes'] }}</b>
-                                : <b style="color: green">{{ $time['seconds'] }}</b>
+                                    : <b style="color: blue">{{ $time['seconds'] }}</b></nobr>
                         </div>
                     </div>
                 @endif

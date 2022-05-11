@@ -23,5 +23,9 @@ class OptionsCotnroller extends Controller
             return redirect()->route('home');
         }
 
+        if($validated['page'] == 'favorite') {
+            return redirect()->route('favorite');
+        }
+
     }
 }

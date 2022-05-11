@@ -15,10 +15,22 @@ class FavoriteController extends Controller
 
         $phrases = Phrase::getFavorite($languageDefault->id);
         $language = Language::getOne($languageDefault->id);
+        $languages = Language::getAll();
 
-        return view('favorite.index', compact('phrases','language'));
+        return view('favorite.index', compact('phrases','language', 'languageDefault', 'languages'));
     }
 
+
+    public function indexLanguages($language_id)
+    {
+        $languageDefault = Options::getDefaultLanguage();
+
+        $phrases = Phrase::getFavorite($language_id);
+        $language = Language::getOne($language_id);
+        $languages = Language::getAll();
+
+        return view('favorite.index', compact('phrases','language', 'languageDefault', 'languages'));
+    }
 
     public function clearFavorite($language_id)
     {

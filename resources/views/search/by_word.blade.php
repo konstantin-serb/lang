@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', $title = 'Поиск по слову: ' . $word)
+@section('title', $title = __('messages.dict.search_by_word').': ' . $word)
 @push('bottom')
     <script src="/js/jquery.js"></script>
     <script src="/js/changeComplexity.js"></script>
@@ -14,7 +14,10 @@
         </form>
 
         <h2 class="b">{{ $title }} ({{ count($phrases) }})</h2>
-        <a class="btn btn-success" href="javascript:history.back()">Назад</a>
+        <a class="btn btn-success" href="javascript:history.back()">
+{{--            Назад--}}
+            {{ __('messages.dict.back') }}
+        </a>
 
         <hr>
         <input type="hidden" id="word" value="{{ $word }}">
@@ -22,7 +25,10 @@
         <div class="row">
             <div class="col-lg-1">
                 <div class="">
-                    <label class="mb-2">К-во циклов</label>
+                    <label class="mb-2">
+                        {{--                            К-во циклов--}}
+                        {{ __('messages.sections.count_cycles') }}
+                    </label>
                     <select class="form-select" name="cycles" id="countCycles">
                         <option value="1" selected>1</option>
                         <option value="2">2</option>
@@ -35,46 +41,87 @@
 
             <div class="col-lg-2">
                 <div class="">
-                    <label class="mb-2">Сложность</label>
+                    <label class="mb-2">
+                        {{--                            Уровень сложности--}}
+                        {{ __('messages.sections.diff_level') }}
+                    </label>
                     <select class="form-select" name="complexity" id="complexity">
-                        <option value="1" selected>Все</option>
-                        <option value="2">Легкий</option>
-                        <option value="3">Средний</option>
-                        <option value="4">Тяжелый</option>
-                        <option value="5">Тяжелый и средний</option>
+                        <option value="1">
+                            {{--                                Все--}}
+                            {{ __('messages.sections.all') }}
+                        </option>
+                        <option value="2">
+                            {{--                                Легкий--}}
+                            {{ __('messages.sections.easy') }}
+                        </option>
+                        <option value="3">
+                            {{--                                Средний--}}
+                            {{ __('messages.sections.medium') }}
+                        </option>
+                        <option value="4">
+                            {{--                                Сложный--}}
+                            {{ __('messages.sections.hard') }}
+                        </option>
+                        <option value="5">
+                            {{--                                Сложный и средний--}}
+                            {{ __('messages.sections.medium_and_hard') }}
+                        </option>
                     </select>
                 </div>
             </div>
 
             <div class="col-lg-2">
                 <div class="">
-                    <label class="mb-2">Сортировка</label>
+                    <label class="mb-2">
+{{--                        Сортировка--}}
+                        {{ __('messages.sections.sorting') }}
+                    </label>
                     <select class="form-select" name="sort" id="sort">
-                        <option value="1">По порядку</option>
-                        <option value="2" selected>Случайно</option>
+                        <option value="1">
+{{--                            По порядку--}}
+                            {{ __('messages.sections.in_order') }}
+                        </option>
+                        <option value="2" selected>
+{{--                            Случайно--}}
+                            {{ __('messages.sections.by_chance') }}
+                        </option>
                     </select>
                 </div>
             </div>
 
             <div class="col-lg-1">
                 <div class="">
-                    <label class="mb-2">Задача</label>
+                    <label class="mb-2">
+{{--                        Задача--}}
+                        {{ __('messages.sections.task') }}
+                    </label>
                     <select class="form-select" name="task" id="task">
-                        <option value="1" selected>Учить</option>
-                        <option value="2">Читать</option>
+                        <option value="1" selected>
+{{--                            Учить--}}
+                            {{ __('messages.sections.learn') }}
+                        </option>
+                        <option value="2">
+{{--                            Читать--}}
+                            {{ __('messages.sections.read') }}
+                        </option>
                     </select>
                 </div>
             </div>
 
             <div class="col-lg-1">
                 <div class="">
-                    <label class="mb-2">Лимит</label>
+                    <label class="mb-2">
+{{--                        Лимит--}}
+                        {{ __('messages.sections.limit') }}
+                    </label>
                     <input class="form-control" name="limit" value="200" id="limit">
                 </div>
             </div>
 
             <div class="col-lg-2 " style="margin-top:2.2em;">
-                <a id="buttonChoose" href="#" class="btn btn-warning ">&nbsp;Учить!&nbsp;</a>
+                <a id="buttonChoose" href="#" class="btn btn-warning ">&nbsp;
+{{--                    Учить--}}
+                    {{ __('messages.sections.learn') }}!&nbsp;</a>
             </div>
 
         </div>
@@ -128,7 +175,7 @@
                                             style="color: rgba(228,0,0,0.51);">({{$phrase->getCountReading()}})</span></span>
                                 <div class="form-check form-check-inline"
                                      style="margin: 0.01em; padding-right: 0.1em; padding-left: 0.7em;">
-                                    <input class="form-check-input" title="легкий" type="radio"
+                                    <input class="form-check-input" title="{{ __('messages.sections.easy') }}" type="radio"
                                            data-id="{{ $phrase->id }}" data-type="1"
                                            name="inlineRadioOptions-{{ $phrase->id }}"
                                            id="inlineRadio-1-{{$phrase->id}}" value="option1"
@@ -136,7 +183,7 @@
                                 </div>
                                 <div class="form-check form-check-inline"
                                      style="margin: 0.01em; padding-right: 0.1em; padding-left: 0.7em;">
-                                    <input class="form-check-input" title="средний" type="radio"
+                                    <input class="form-check-input" title="{{ __('messages.sections.medium') }}" type="radio"
                                            data-id="{{ $phrase->id }}" data-type="2"
                                            name="inlineRadioOptions-{{ $phrase->id }}"
                                            id="inlineRadio-2-{{$phrase->id}}" value="option2"
@@ -144,7 +191,7 @@
                                 </div>
                                 <div class="form-check form-check-inline"
                                      style="margin: 0.01em; padding-right: 0.1em; padding-left: 0.7em;">
-                                    <input class="form-check-input" title="сложный" type="radio"
+                                    <input class="form-check-input" title="{{ __('messages.sections.hard') }}" type="radio"
                                            data-id="{{ $phrase->id }}" data-type="3"
                                            name="inlineRadioOptions-{{ $phrase->id }}"
                                            id="inlineRadio-3-{{$phrase->id}}" value="option3"

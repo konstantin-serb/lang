@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', $title = 'Обучение по разделу')
+@section('title', $title = __('messages.train.train_in_section'))
 @push('bottom')
     <script src="/js/jquery.js"></script>
     <script src="/js/checkPhrase.js"></script>
@@ -12,7 +12,7 @@
     <div class="container">
         <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('language.index') }}">Языки</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('language.index') }}">{{ __('messages.main.languages') }}</a></li>
                 <li class="breadcrumb-item"><a href="{{ route('language.show', ['language' => $section->language->id]) }}">{{ $section->language->title }}</a></li>
                 <?= $section->getBreadcrumb($section->id)?>
 
@@ -34,7 +34,7 @@
         @endif
 
         <hr>
-        <span class=" h5">Сгененировано <span class="b">{{ count($array) }}</span> строк</span>
+        <span class=" h5 b">{{ __('messages.train.generate', ['count' => count($array)]) }}</span>
 
         @if(!$array == null)
             <div class="h5 mt-5">
@@ -64,13 +64,13 @@
 
                                 @if($compl)
                                     <div class="form-check form-check-inline" style="margin: 0.01em; padding-right: 0.1em; padding-left: 0.7em;">
-                                        <input tabindex="-1" class="form-check-input" title="легкий" type="radio" data-id="{{ $value->id }}" data-type="1" name="inlineRadioOptions-{{ $value->id }}" id="inlineRadio-1-{{$value->id}}" value="option1" @if($value->complexity == 1) checked @endif>
+                                        <input tabindex="-1" class="form-check-input" title="{{ __('messages.sections.easy') }}" type="radio" data-id="{{ $value->id }}" data-type="1" name="inlineRadioOptions-{{ $value->id }}" id="inlineRadio-1-{{$value->id}}" value="option1" @if($value->complexity == 1) checked @endif>
                                     </div>
                                     <div class="form-check form-check-inline" style="margin: 0.01em; padding-right: 0.1em; padding-left: 0.7em;">
-                                        <input tabindex="-1" class="form-check-input" title="средний" type="radio" data-id="{{ $value->id }}" data-type="2" name="inlineRadioOptions-{{ $value->id }}" id="inlineRadio-2-{{$value->id}}" value="option2" @if($value->complexity == 2) checked @endif>
+                                        <input tabindex="-1" class="form-check-input" title="{{ __('messages.sections.medium') }}" type="radio" data-id="{{ $value->id }}" data-type="2" name="inlineRadioOptions-{{ $value->id }}" id="inlineRadio-2-{{$value->id}}" value="option2" @if($value->complexity == 2) checked @endif>
                                     </div>
                                     <div class="form-check form-check-inline" style="margin: 0.01em; padding-right: 0.1em; padding-left: 0.7em;">
-                                        <input tabindex="-1" class="form-check-input" title="сложный" type="radio" data-id="{{ $value->id }}" data-type="3" name="inlineRadioOptions-{{ $value->id }}" id="inlineRadio-3-{{$value->id}}" value="option3" @if($value->complexity == 3) checked @endif>
+                                        <input tabindex="-1" class="form-check-input" title="{{ __('messages.sections.hard') }}" type="radio" data-id="{{ $value->id }}" data-type="3" name="inlineRadioOptions-{{ $value->id }}" id="inlineRadio-3-{{$value->id}}" value="option3" @if($value->complexity == 3) checked @endif>
                                     </div>
                                 @endif
 

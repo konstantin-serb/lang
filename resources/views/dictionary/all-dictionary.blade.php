@@ -1,12 +1,12 @@
 @extends('layouts.app')
-@section('title', $title ='Весь словарный запас')
+@section('title', $title = __('messages.dict.all_vocabulary'))
 @push('bottom')
     <script src="/js/jquery.js"></script>
     <script src="/js/checkWord.js"></script>
 @endpush
 @section('content')
 <div class="container">
-    <h2>Язык: {{ $language->title }}</h2>
+    <h2>{{ __('messages.train.language') }}: {{ $language->title }}</h2>
     <h2 class="b">{{ $title }}: {{$dictionary->count()}} ({{ $countWordsCheck }})</h2>
 
     @foreach($dictionary as $word)

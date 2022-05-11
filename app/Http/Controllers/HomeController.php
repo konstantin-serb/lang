@@ -10,6 +10,7 @@ use App\Models\Section;
 use App\Models\Statistics;
 use App\Models\Time;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 
 class HomeController extends Controller
 {
@@ -52,6 +53,22 @@ class HomeController extends Controller
         $color = sprintf('#%02X%02X%02X', rand(0, 255), rand(0, 255), rand(0, 255));
 
         return view('home.start-page', compact('color'));
+    }
+
+
+    public function checkLanguage($id)
+    {
+        if(auth()->id()) {
+            $options = Options::firstOrCreate(['user_id' => auth()->id()]);
+            $options->lang = $id;
+            $options->save();
+        }
+
+        session(['locale' => $id]);
+        App::setLocale($id);
+        $currentLocale = App::getLocale();
+//        dd(session('locale'), $currentLocale);
+        return redirect()->back();
     }
 }
 
