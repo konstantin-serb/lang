@@ -80,9 +80,16 @@ Route::middleware('set_locale')->group(function() {
 
 //    Route::get('/temp', [StatisticController::class, 'temp']);
 
+        Route::middleware('admin')->group(function () {
+            Route::get('/admin', [\App\Http\Controllers\Admin\AdminController::class, 'index'])->name('admin');
+            Route::get('/admin/user', [\App\Http\Controllers\Admin\UserController::class, 'index'])->name('admin.user');
+        });
+
     });
 
     Route::get('/home/check-lang/{id}', [App\Http\Controllers\HomeController::class, 'checkLanguage'])->name('home.checkLang');
 
 });
+
+
 

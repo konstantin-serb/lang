@@ -42,4 +42,10 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+
+    public static function getAll()
+    {
+        return self::orderBy('created_at', 'desc')->get();
+    }
 }
