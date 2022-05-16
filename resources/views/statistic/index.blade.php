@@ -33,7 +33,7 @@ $middleDays = 30;
                         <div class="col-lg-3 myStatBlock1">
                             <?php $createdAll = Statistics::getStatisticTotal($item->id)->sum('created');?>
                             @if(Statistics::checkCountDays($item->id, $middleDays)) <a
-                                href="{{ route('statistic.diagram.small', ['language_id' => $item->id, 'type' => 'created', 'period' => 100]) }}"
+                                href="{{ route('statistic.diagram.small', ['language_id' => $item->id, 'type' => 'created', 'period' => 105]) }}"
                                 class="link"> @endif
 {{--                                Общее количество фраз--}}
                                     {{ __('messages.statistic.total_count_phrases') }}: <span
@@ -41,21 +41,20 @@ $middleDays = 30;
                                 @if(Statistics::checkCountDays($item->id, $middleDays)) </a> @endif
                             <br>
                             <?php $created = Statistics::getCreatedToday($item->id)?>
-                            @if(Statistics::checkCountDays($item->id)) <a
-                                href="{{ route('statistic.diagram.small', ['language_id' => $item->id, 'type' => 'created', 'period' => 20]) }}"
-                                class="link"> @endif
+                            <a href="{{ route('statistic.diagram.small', ['language_id' => $item->id, 'type' => 'created', 'period' => 20]) }}"
+                                class="link">
                                 @if($created > 0) <b> @endif
 {{--                                    Добавлено сегодня--}}
                                         {{ __('messages.statistic.added_today') }}: <span
                                         class="@if($created>0) b text-danger @endif">{{ $created }}</span>
                                     @if($created > 0) </b> @endif
-                            @if(Statistics::checkCountDays($item->id)) </a> @endif
+                            </a>
 
                         </div>
                         <div class="col-lg-3 myStatBlock1">
                             <?php $repeated = \App\Models\Statistics::getRepeatedTotal($item->id)?>
                             @if(Statistics::checkCountDays($item->id, $middleDays)) <a
-                                href="{{ route('statistic.diagram.small', ['language_id' => $item->id, 'type' => 'repeated', 'period' => 100]) }}"
+                                href="{{ route('statistic.diagram.small', ['language_id' => $item->id, 'type' => 'repeated', 'period' => 105]) }}"
                                 class="link"> @endif
                                 <span>
 {{--                                    Повторено раз--}}
@@ -64,23 +63,22 @@ $middleDays = 30;
                             @if(Statistics::checkCountDays($item->id, $middleDays)) </a> @endif
                             <br>
                             <?php $repeat = Statistics::getRepeatedToday($item->id)?>
-                            @if(Statistics::checkCountDays($item->id)) <a
-                                href="{{ route('statistic.diagram.small', ['language_id' => $item->id, 'type' => 'repeated', 'period' => 20]) }}"
-                                class="link"> @endif
+                            <a href="{{ route('statistic.diagram.small', ['language_id' => $item->id, 'type' => 'repeated', 'period' => 20]) }}"
+                                class="link">
                                 @if($repeat > 0) <b> @endif
                                     <span>
 {{--                                        Повторено сегодня--}}
                                         {{ __('messages.statistic.repeated_today') }}: <span
                                             class="@if($repeat > 0) b text-danger @endif">{{ $repeat }}</span></span>
                                     @if($repeat > 0) </b> @endif
-                                @if(Statistics::checkCountDays($item->id)) </a> @endif
+                                </a>
                         </div>
 
 
                         <div class="col-lg-3 myStatBlock1">
                             <?php $readed = \App\Models\Statistics::getReadTotal($item->id)?>
                             @if(Statistics::checkCountDays($item->id, $middleDays)) <a
-                                href="{{ route('statistic.diagram.small', ['language_id' => $item->id, 'type' => 'repeated', 'period' => 100]) }}"
+                                href="{{ route('statistic.diagram.small', ['language_id' => $item->id, 'type' => 'repeated', 'period' => 105]) }}"
                                 class="link"> @endif
                                 <span>
 {{--                                    Прочитано раз--}}
@@ -90,9 +88,8 @@ $middleDays = 30;
                                 @if(Statistics::checkCountDays($item->id, $middleDays)) </a> @endif
                             <br>
                             <?php $read = Statistics::getReadToday($item->id)?>
-                            @if(Statistics::checkCountDays($item->id)) <a
-                                href="{{ route('statistic.diagram.small', ['language_id' => $item->id, 'type' => 'repeated', 'period' => 20]) }}"
-                                class="link"> @endif
+                            <a href="{{ route('statistic.diagram.small', ['language_id' => $item->id, 'type' => 'repeated', 'period' => 20]) }}"
+                                class="link">
                                 @if($read > 0) <b> @endif
                                     <span>
 {{--                                        Прочитано сегодня--}}
@@ -100,13 +97,13 @@ $middleDays = 30;
                                         : </span> <span
                                         class="@if($read > 0) b text-danger @endif">{{ $read }}</span>
                                     @if($read > 0) </b> @endif
-                                @if(Statistics::checkCountDays($item->id)) </a> @endif
+                                </a>
                         </div>
 
                         <div class="col-lg-3 myStatBlock1">
                             <?php $words = \App\Models\Dictionary::getForLanguageAll($item->id)->count()?>
                             @if(Statistics::checkCountDays($item->id, $middleDays)) <a
-                                href="{{ route('statistic.diagram.small', ['language_id' => $item->id, 'type' => 'created', 'period' => 100]) }}"
+                                href="{{ route('statistic.diagram.small', ['language_id' => $item->id, 'type' => 'created', 'period' => 105]) }}"
                                 class="link"> @endif
                                 <span>
 {{--                                    Словарный запас--}}
@@ -116,16 +113,15 @@ $middleDays = 30;
                                 @if(Statistics::checkCountDays($item->id, $middleDays)) </a> @endif
                             <br>
                             <?php $wordsToday = Statistics::getNewWordsToday($item->id)?>
-                            @if(Statistics::checkCountDays($item->id)) <a
-                                href="{{ route('statistic.diagram.small', ['language_id' => $item->id, 'type' => 'created', 'period' => 20]) }}"
-                                class="link">@endif
+                           <a href="{{ route('statistic.diagram.small', ['language_id' => $item->id, 'type' => 'created', 'period' => 20]) }}"
+                                class="link">
                                 @if($wordsToday > 0) <b> @endif
                                     <span>
 {{--                                        Добавлено сегодня--}}
                                         {{ __('messages.statistic.added_today') }}: </span> <span
                                         class="@if($wordsToday > 0) b text-danger @endif">{{ $wordsToday }}</span>
                                     @if($wordsToday > 0) </b> @endif
-                                @if(Statistics::checkCountDays($item->id))</a> @endif
+                                </a>
                         </div>
 
                         <div class="col-lg-12 myStatBlock1">
@@ -135,7 +131,7 @@ $middleDays = 30;
                             $timeAllHMS = \App\Models\Time::getHMS($timeAll->sum('time'));
                             ?>
                                 @if(\App\Models\Time::checkCountDays($item->id, $middleDays)) <a
-                                href="{{ route('statistic.diagram.time', ['language_id' => $item->id, 'period' => 100]) }}"
+                                href="{{ route('statistic.diagram.time', ['language_id' => $item->id, 'period' => 105]) }}"
                                 class="link"><b> @endif
                                     <span>
 {{--                                        Общее количество времени на изучение--}}

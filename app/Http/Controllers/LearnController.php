@@ -266,7 +266,9 @@ class LearnController extends Controller
         $phrase = Phrase::getOne($request->id);
         Time::setTime($phrase->language_id);
 
-        if ($phrase->phrase === $request->value) {
+        $phraseInput = Phrase::preparePhrase($request->value);
+
+        if ($phrase->phrase === $phraseInput) {
             $phrase->count = $phrase->count + 1;
             $statistics = Statistics::firstOrNew(['user_id' => auth()->id(),
                 'language_id' => $phrase->language_id,
@@ -280,7 +282,7 @@ class LearnController extends Controller
                 .'</b>:<b style="color:blue;">'. $timeToday['seconds'] .'</b>)';
             $response = [
                 'success' => true,
-                'string' => (string)'<input class="my-input true" type="text" style="width: 100%; border: none" data-id="' . $phrase->id . '" value="' . $request->value . '" data-num="' . $request->key . '">',
+                'string' => (string)'<input class="my-input true" type="text" style="width: 100%; border: none" data-id="' . $phrase->id . '" value="' . $phraseInput . '" data-num="' . $request->key . '">',
                 'repeated' => $statistics->repeated,
                 'phrase_count' => $phrase->count,
                 'timeTop' => $time,
@@ -291,7 +293,7 @@ class LearnController extends Controller
                 .'</b>:<b style="color:blue;">'. $timeToday['seconds'] .'</b>)';
             $response = [
                 'success' => false,
-                'string' => (string)'<input class="my-input false" type="text" style="width: 100%; border: none" data-id="' . $phrase->id . '" value="' . $request->value . '" data-num="' . $request->key . '">',
+                'string' => (string)'<input class="my-input false" type="text" style="width: 100%; border: none" data-id="' . $phrase->id . '" value="' . $phraseInput . '" data-num="' . $request->key . '">',
                 'timeTop' => $time,
             ];
         }

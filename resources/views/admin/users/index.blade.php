@@ -9,7 +9,7 @@
     </style>
 
     <div class="container">
-        <h1 class="b">Users</h1>
+        <h2 class="b">Users</h2>
 
         <div class="mt-4">
             <div class="row" style="border-bottom: 2px solid green; font-size: 1rem; font-weight: bold; padding-bottom: 0.3em;" >
@@ -30,7 +30,7 @@
             @foreach($users as $user)
                 <div class="row @if($user->admin === 1) selected @endif" style="border-bottom: 1px solid green; font-size: 1.05rem; padding-bottom: 0.3em; padding-top:0.3em;" >
                     <div class="col-lg-2">
-                        <a class="myLink" href="#">
+                        <a class="myLink" href="{{ route('admin.user.view', ['user' => $user->id]) }}">
                         {{ $user->id }}. {{$user->name}}
                         </a>
                     </div>

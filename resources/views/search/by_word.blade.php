@@ -23,7 +23,7 @@
         <input type="hidden" id="word" value="{{ $word }}">
 
         <div class="row">
-            <div class="col-lg-1">
+            <div class="col-lg-2">
                 <div class="">
                     <label class="mb-2">
                         {{--                            К-во циклов--}}

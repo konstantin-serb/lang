@@ -29,16 +29,21 @@
         <h2 class="b">{{ $title }} ({{ $section->countPhrases() }})</h2>
         <p><?=$section->description?></p>
 
+
         <div class="">
+
             <div class="btn-group mt-3" style="margin-right: 1em;">
+                @if($phrases->isEmpty())
                 <a href="{{ route('section.create.sec', ['section' => $section->id, 'language' => $section->language->id]) }}"
                    class="btn btn-outline-secondary" autofocus>
                     {{ __('messages.languages.add_sec') }}</a>
+                @endif
                 <a class="btn btn-outline-success" href="{{ route('section.edit', ['section' => $section->id]) }}">
 {{--                    Редактировать--}}
                     {{ __('messages.sections.edit') }}
                 </a>
             </div>
+
             @if($section->sections->isEmpty())
             <a href="{{ route('phrase.create.phrase', ['section' => $section->id]) }}" class="btn btn-success mt-3">
 {{--                Добавить/редактировать фразы--}}
@@ -46,6 +51,8 @@
             </a>
             @endif
         </div>
+
+
 
         @if(!$section->sections->isEmpty())
             <div class="mt-3">

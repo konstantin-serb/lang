@@ -185,7 +185,7 @@ class Statistics extends Model
 
     public static function calculateStartAndEnd($language_id)
     {
-        $countStep = 19;
+        $countStep = 18;
         $statistics = self::getStatisticTotal($language_id);
         $count = $statistics->count();
         $startGregorian = self::getNumberGregDay($statistics[0]->date);
@@ -197,8 +197,10 @@ class Statistics extends Model
             $period = 2;
         }
 
+        $start = date('Y-m-d', strtotime('-' . $period * ($countStep) . ' days', strtotime($statistics[$count-1]->date)));
+//        dd($statistics[0]->date, $period, $start);
         return [
-            'start' => $statistics[0]->date,
+            'start' => $start,//$statistics[0]->date,
             'end' => $statistics[$count-1]->date,
             'period' => $period,
         ];

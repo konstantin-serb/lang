@@ -334,4 +334,17 @@ class Phrase extends Model
         }
     }
 
+
+    public static function preparePhrase($phrase)
+    {
+        $array = explode(' ', $phrase);
+        foreach($array as $key => $value):
+            if($value == '' || $value == ' ' ):
+                unset($array[$key]);
+            endif;
+        endforeach;
+        $prepare = implode(' ', $array);
+        return $prepare;
+    }
+
 }

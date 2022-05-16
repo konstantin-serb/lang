@@ -122,6 +122,27 @@ footer {
     background-color: rgba(255, 255, 0, 0.12);
 }
 
+.help {
+    font-size: 1rem;
+}
+
+.a-help {
+    margin-top: 0.7em;
+}
+
+.help .image {
+    max-width: 100%;
+}
+
+.img {
+    margin: 1em 0;
+}
+
+.help p {
+    font-weight: bold;
+    margin-top: 3.5em;
+}
+
 
 
 

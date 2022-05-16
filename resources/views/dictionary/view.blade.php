@@ -12,12 +12,12 @@
             {{ __('messages.dict.delete_word') }}
         </a>
         <?php $countLetterWord = iconv_strlen($word->word)?>
-        @if($countLetterWord > 2)
+{{--        @if($countLetterWord > 2)--}}
         <a class="btn btn-success" href="{{ route('search.by_word', ['language_id' => $word->language_id,'word' => $word->word]) }}">
 {{--            Фразы со словом--}}
             {{ __('messages.dict.phrases_with_the_word') }}
         </a>
-        @endif
+{{--        @endif--}}
     </div>
 </div>
 @endsection

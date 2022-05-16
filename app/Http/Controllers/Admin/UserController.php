@@ -13,4 +13,12 @@ class UserController extends Controller
         $users = User::getAll();
         return view('admin.users.index', compact('users'));
     }
+
+
+    public function view($id)
+    {
+        $user = User::getOne($id);
+
+        return view('admin.users.view', compact('user'));
+    }
 }

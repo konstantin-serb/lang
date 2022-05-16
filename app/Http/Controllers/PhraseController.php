@@ -27,12 +27,17 @@ class PhraseController extends Controller
 
     public function store(PhraseAddRequest $request)
     {
+        $phrase = Phrase::preparePhrase($request->phrase);
+        $translate = Phrase::preparePhrase($request->translate);
+
         $model = Phrase::getModel();
         $model->fill($request->all());
         $model->user_id = auth()->id();
         $model->status = 1;
         $section = Section::where('id', $model->section_id)->first();
         $model->language_id = $section->language_id;
+        $model->phrase = $phrase;
+        $model->translate = $translate;
         if($model->save()){
             //Добавление Id фразы в историю
             $options = Options::addPhrase($model->id);
@@ -63,12 +68,18 @@ class PhraseController extends Controller
 
     public function update(PhraseUpdateRequest $request, $id)
     {
-        $phrase = Phrase::getOne($id);
-        $phrase->fill($request->all());
-        $phrase->save();
+        $model = Phrase::getOne($id);
+        $model->fill($request->all());
 
-        DictionaryController::addPhrase($phrase->phrase, $phrase->section_id);
-        return redirect()->route('phrase.create.phrase', ['section' => $phrase->section_id]);
+        $phrase = Phrase::preparePhrase($request->phrase);
+        $translate = Phrase::preparePhrase($request->translate);
+        $model->phrase = $phrase;
+        $model->translate = $translate;
+
+        $model->save();
+
+        DictionaryController::addPhrase($model->phrase, $model->section_id);
+        return redirect()->route('phrase.create.phrase', ['section' => $model->section_id]);
     }
 
 
@@ -139,6 +150,12 @@ class PhraseController extends Controller
     {
         $model = Phrase::getOne($request->id);
         $model->fill($request->all());
+
+        $phrase = Phrase::preparePhrase($request->phrase);
+        $translate = Phrase::preparePhrase($request->translate);
+        $model->phrase = $phrase;
+        $model->translate = $translate;
+
         if($model->save()) {
             $request = true;
             return response()->json($request);

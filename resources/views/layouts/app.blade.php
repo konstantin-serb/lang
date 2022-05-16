@@ -136,6 +136,10 @@ $flagUa = '<g fill-rule="evenodd" stroke-width="1pt">
 
                         @endif
                     @endauth
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               href="{{ route('help') }}">{{ __('messages.main.help') }}</a>
+                        </li>
                     <li class="nav-item">
                         <!-- Example single danger button -->
                         <span class="btn-group">

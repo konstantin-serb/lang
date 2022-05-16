@@ -34,10 +34,10 @@
             @if($period == 20)
                 @if($type == 'created')
                     @if(\App\Models\Statistics::checkCountDays($language_id, $middleDays))
-                    <a href="{{ route('statistic.diagram.small', ['language_id' => $language_id, 'type' => 'created', 'period' => 100]) }}"
+                    <a href="{{ route('statistic.diagram.small', ['language_id' => $language_id, 'type' => 'created', 'period' => 105]) }}"
                        class="btn btn-primary">
-{{--                        Диаграмма за 100 дней--}}
-                        @lang('messages.statistic.diagram_for_n_days', ['n' => 100])
+{{--                        Диаграмма за 105 дней--}}
+                        @lang('messages.statistic.diagram_for_n_days', ['n' => 105])
                     </a>
                     @endif
                     <a href="{{ route('statistic.diagram.small', ['language_id' => $language_id, 'type' => 'repeated', 'period' => $period]) }}"
@@ -71,10 +71,10 @@
 
                 @elseif($type = 'repeated')
                     @if(\App\Models\Statistics::checkCountDays($language_id, $middleDays))
-                    <a href="{{ route('statistic.diagram.small', ['language_id' => $language_id, 'type' => 'repeated', 'period' => 100]) }}"
+                    <a href="{{ route('statistic.diagram.small', ['language_id' => $language_id, 'type' => 'repeated', 'period' => 105]) }}"
                        class="btn btn-primary">
-{{--                        Диаграмма за 100 дней--}}
-                        @lang('messages.statistic.diagram_for_n_days', ['n' => 100])
+{{--                        Диаграмма за 105 дней--}}
+                        @lang('messages.statistic.diagram_for_n_days', ['n' => 105])
                     </a>
                     @endif
 
@@ -108,14 +108,14 @@
 {{--                    //конец кнопки за все время--}}
                 @endif
 
-            @elseif($period == 100)
+            @elseif($period == 105)
                 @if($type == 'created')
                     <a href="{{ route('statistic.diagram.small', ['language_id' => $language_id, 'type' => 'created', 'period' => 20]) }}"
                        class="btn btn-primary">
 {{--                        Диаграмма за 20 дней--}}
                         @lang('messages.statistic.diagram_for_n_days', ['n' => 20])
                     </a>
-                    <a href="{{ route('statistic.diagram.small', ['language_id' => $language_id, 'type' => 'repeated', 'period' => 100]) }}"
+                    <a href="{{ route('statistic.diagram.small', ['language_id' => $language_id, 'type' => 'repeated', 'period' => 105]) }}"
                        class="btn btn-warning">
 {{--                        Диаграмма повторения и чтения--}}
                         @lang('messages.statistic.graph_repetition_and_reading')
@@ -152,7 +152,7 @@
 {{--                        Диаграмма за 20 дней--}}
                         @lang('messages.statistic.diagram_for_n_days', ['n' => 20])
                     </a>
-                    <a href="{{ route('statistic.diagram.small', ['language_id' => $language_id, 'type' => 'created', 'period' => 100]) }}"
+                    <a href="{{ route('statistic.diagram.small', ['language_id' => $language_id, 'type' => 'created', 'period' => 105]) }}"
                        class="btn btn-warning">
 {{--                        Диаграмма фраз и слов--}}
                         @lang('messages.statistic.phrase_graph')
@@ -191,10 +191,10 @@
 {{--                        Диаграмма за 20 дней--}}
                         @lang('messages.statistic.diagram_for_n_days', ['n' => 20])
                     </a>
-                    <a href="{{ route('statistic.diagram.small', ['language_id' => $language_id, 'type' => 'created', 'period' => 100]) }}"
+                    <a href="{{ route('statistic.diagram.small', ['language_id' => $language_id, 'type' => 'created', 'period' => 105]) }}"
                        class="btn btn-primary">
-{{--                        Диаграмма за 100 дней--}}
-                        @lang('messages.statistic.diagram_for_n_days', ['n' => 100])
+{{--                        Диаграмма за 105 дней--}}
+                        @lang('messages.statistic.diagram_for_n_days', ['n' => 105])
                     </a>
                     {{--                    //показ кнопки за все время--}}
                     @if(\App\Models\Statistics::checkCountDays($language_id, $maxDays))
@@ -211,10 +211,10 @@
 {{--                        Диаграмма за 20 дней--}}
                         @lang('messages.statistic.diagram_for_n_days', ['n' => 20])
                     </a>
-                    <a href="{{ route('statistic.diagram.small', ['language_id' => $language_id, 'type' => 'repeated', 'period' => 100]) }}"
+                    <a href="{{ route('statistic.diagram.small', ['language_id' => $language_id, 'type' => 'repeated', 'period' => 105]) }}"
                        class="btn btn-primary">
-{{--                        Диаграмма за 100 дней--}}
-                        @lang('messages.statistic.diagram_for_n_days', ['n' => 100])
+{{--                        Диаграмма за 105 дней--}}
+                        @lang('messages.statistic.diagram_for_n_days', ['n' => 105])
                     </a>
                     {{--                    //показ кнопки за все время--}}
                     @if(\App\Models\Statistics::checkCountDays($language_id, $maxDays))

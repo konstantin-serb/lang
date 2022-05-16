@@ -19,6 +19,8 @@ Route::middleware('set_locale')->group(function() {
     Auth::routes();
 
     Route::get('/', [\App\Http\Controllers\HomeController::class, 'startPage']);
+    Route::get('/help', [\App\Http\Controllers\HelpController::class, 'index'])->name('help');
+    Route::get('/help/part/{part}', [\App\Http\Controllers\HelpController::class, 'parts'])->name('help.part');
 
     Route::middleware('auth')->group(function () {
         Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
@@ -83,6 +85,7 @@ Route::middleware('set_locale')->group(function() {
         Route::middleware('admin')->group(function () {
             Route::get('/admin', [\App\Http\Controllers\Admin\AdminController::class, 'index'])->name('admin');
             Route::get('/admin/user', [\App\Http\Controllers\Admin\UserController::class, 'index'])->name('admin.user');
+            Route::get('/admin/user/{user}', [\App\Http\Controllers\Admin\UserController::class, 'view'])->name('admin.user.view');
         });
 
     });

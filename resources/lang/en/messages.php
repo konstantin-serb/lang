@@ -7,6 +7,7 @@ return [
         'training' => 'Training', // Тренировка
         'statistics' => 'Statistics', // Статистика
         'favorite' => 'Favorite', // Избранное
+        'help' => 'Help', // Помощь
         'search' => 'Search', // Поиск
         'start_to_find' => 'Fill in the form and click Search', // Заполните форму и нажмите Найти
         'Search_language' => 'Search language', // Язык поиска

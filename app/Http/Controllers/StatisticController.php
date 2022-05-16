@@ -45,7 +45,7 @@ class StatisticController extends Controller
         }
         $all = false;
 
-        if($period == 100) {
+        if($period == 105) {
             $step = 7;
             $start = date('Y-m-d', strtotime($period . ' days ago', time()));
             $end = date('Y-m-d', time());
@@ -138,7 +138,7 @@ class StatisticController extends Controller
             'background1' => '#ffdead',
         ];
 
-        if($period == 100) {
+        if($period == 105) {
             $step = 7;
             $start = date('Y-m-d', strtotime($period . ' days ago', time()));
             $end = date('Y-m-d', time());
@@ -230,10 +230,16 @@ class StatisticController extends Controller
     private function getArraysForDiagrams($start, $end, $language_id, $type, $daysAdd, $all)
     {
         $i = $start;
+//        dd($end);
+        if($daysAdd > 1) {
+            $end = date('Y-m-d', strtotime('-1 day', strtotime($end)));
+        }
+//        dd($end);
         $countArray = [];
         $dateArray = [];
         $num = 0;
-        while ($i <= $end):
+        $nextDate = date('Y-m-d', strtotime('+' . $daysAdd . ' days', strtotime($i)));
+        while ($nextDate <= $end):
             $nextDate = date('Y-m-d', strtotime('+' . $daysAdd . ' days', strtotime($i)));
             if($num > 0 && $daysAdd > 1) $i = date('Y-m-d', strtotime('+1 day', strtotime($i)));
 //            dd($i);
@@ -243,12 +249,17 @@ class StatisticController extends Controller
             } else {
                 $items = Statistics::where('user_id', auth()->id())->where('language_id', '=', $language_id)
                     ->whereBetween('date', [$i, $nextDate])->get();
+
             }
 
             $countArray[$num] = $items->sum($type);
-            $dateArray[$num] = date('dM', strtotime($i));
+            $dateArray[$num] = date('d/m', strtotime($i)) .'-' .date('d/m', strtotime($nextDate));
             if($all) {
-                $dateArray[$num] = date('d.My', strtotime($i));
+                $dateArray[$num] = date('d.m', strtotime($i)) .'-' .date('d.m/y', strtotime($nextDate));;
+            }
+
+            if($daysAdd === 1) {
+                $dateArray[$num] = date('d.m', strtotime($i));
             }
 
             $i = $nextDate;

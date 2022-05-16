@@ -48,4 +48,10 @@ class User extends Authenticatable
     {
         return self::orderBy('created_at', 'desc')->get();
     }
+
+
+    public static function getOne($id)
+    {
+        return self::where('id', $id)->first();
+    }
 }
