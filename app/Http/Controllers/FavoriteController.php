@@ -24,7 +24,6 @@ class FavoriteController extends Controller
     public function indexLanguages($language_id)
     {
         $languageDefault = Options::getDefaultLanguage();
-
         $phrases = Phrase::getFavorite($language_id);
         $language = Language::getOne($language_id);
         $languages = Language::getAll();

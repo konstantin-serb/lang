@@ -7,6 +7,7 @@ use App\Http\Requests\SectionEditRequest;
 use App\Models\Language;
 use App\Models\phrases\Phrase;
 use App\Models\Section;
+use App\Models\Statistics;
 use Illuminate\Http\Request;
 
 class SectionController extends Controller
@@ -23,11 +24,11 @@ class SectionController extends Controller
     {
         $section = new Section($request->all());
         $section->user_id = auth()->id();
-        if($request->parent_id == 0) {
+        if ($request->parent_id == 0) {
             $section->parent_id = null;
         }
         $section->save();
-        if(!$request->parent_id) {
+        if (!$request->parent_id) {
             return redirect()->route('language.show', ['language' => $request->language_id]);
         } else {
             return redirect()->route('section.show', ['section' => $request->parent_id]);
@@ -66,6 +67,7 @@ class SectionController extends Controller
     public function delete($id)
     {
         $section = Section::getOne($id);
+        $ids = $section->sectionIds($section);
 
         return view('section.delete', compact('section'));
     }
@@ -77,8 +79,8 @@ class SectionController extends Controller
         $phrases = $model->where('user_id', auth()->id())
             ->where('section_id', '=', $section_id)
             ->get();
-        if(!$phrases->isEmpty()) {
-            foreach($phrases as $phrase):
+        if (!$phrases->isEmpty()) {
+            foreach ($phrases as $phrase):
                 $phrase->status = 0;
                 $phrase->save();
             endforeach;
@@ -93,8 +95,8 @@ class SectionController extends Controller
         $phrases = $model->where('user_id', auth()->id())
             ->where('section_id', '=', $section_id)
             ->get();
-        if(!$phrases->isEmpty()) {
-            foreach($phrases as $phrase):
+        if (!$phrases->isEmpty()) {
+            foreach ($phrases as $phrase):
                 $phrase->status = 1;
                 $phrase->save();
             endforeach;
@@ -105,6 +107,42 @@ class SectionController extends Controller
 
     public function destroy($id)
     {
-        dd(__METHOD__);
+        $section = Section::getOne($id);
+        $ids = $section->sectionIds($section);
+        if ($section->parent_id) {
+            $parentId = $section->parent->id;
+        } else {
+            $parentId = null;
+        }
+
+        $languageId = $section->language_id;
+
+        if (count($ids) == 1) {
+            Phrase::phrasesSectionDelete($id);
+            $section->delete();
+
+            if ($parentId) {
+                return redirect()->route('section.show', ['section' => $parentId]);
+            } else {
+                return redirect()->route('language.show', ['language' => $languageId]);
+            }
+
+        } else {
+            foreach ($ids as $key => $value) {
+                $innerSection = $section = Section::getOne($value);
+                Phrase::phrasesSectionDelete($id);
+                $innerSection->delete();
+            }
+            $section->delete();
+
+            if ($parentId) {
+                return redirect()->route('section.show', ['section' => $parentId]);
+            } else {
+                return redirect()->route('language.show', ['language' => $languageId]);
+            }
+        }
     }
+
+
+
 }

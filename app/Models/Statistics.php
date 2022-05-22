@@ -27,17 +27,20 @@ class Statistics extends Model
         return $statistics;
     }
 
-    function getToday($language_id)
+    function getToday($language_id, $user_id = false)
     {
-        return self::where('user_id', auth()->id())
+        if(!$user_id) {
+            $user_id = auth()->id();
+        }
+        return self::where('user_id', $user_id)
             ->where('language_id', '=', $language_id)
             ->where('date', '=', date('Y-m-d'))
             ->first();
     }
 
-    public static function getCreatedToday($language_id)
+    public static function getCreatedToday($language_id, $user_id = false)
     {
-        $statistics  = self::getToday($language_id);
+        $statistics  = self::getToday($language_id, $user_id);
 
         if(isset($statistics->created)) {
             return $statistics->created;
@@ -47,9 +50,9 @@ class Statistics extends Model
     }
 
 
-    public static function getReadToday($language_id)
+    public static function getReadToday($language_id, $user_id=false)
     {
-        $statistics  = self::getToday($language_id);
+        $statistics  = self::getToday($language_id, $user_id);
 
         if(isset($statistics->readed)) {
             return $statistics->readed;
@@ -59,9 +62,9 @@ class Statistics extends Model
     }
 
 
-    public static function getRepeatedToday($language_id)
+    public static function getRepeatedToday($language_id, $user_id=false)
     {
-        $statistics  = self::getToday($language_id);
+        $statistics  = self::getToday($language_id, $user_id);
 
         if(isset($statistics->repeated)) {
             return $statistics->repeated;
@@ -71,9 +74,9 @@ class Statistics extends Model
     }
 
 
-    public static function getNewWordsToday($language_id)
+    public static function getNewWordsToday($language_id, $user_id=false)
     {
-        $statistics  = self::getToday($language_id);
+        $statistics  = self::getToday($language_id, $user_id);
 
         if(isset($statistics->words)) {
             return $statistics->words;
@@ -84,9 +87,13 @@ class Statistics extends Model
 
 
 
-    public static function getStatisticTotal($language_id)
+    public static function getStatisticTotal($language_id, $user_id = false)
     {
-        $statistics  = self::where('user_id', auth()->id())
+        if(!$user_id) {
+            $user_id = auth()->id();
+        }
+
+        $statistics  = self::where('user_id', $user_id)
             ->where('language_id', '=', $language_id)
             ->orderBy('date')
             ->get();
@@ -94,16 +101,16 @@ class Statistics extends Model
     }
 
 
-    public static function getRepeatedTotal($language_id)
+    public static function getRepeatedTotal($language_id, $user_id=false)
     {
-        $statistic = self::getStatisticTotal($language_id);
+        $statistic = self::getStatisticTotal($language_id, $user_id);
         return $statistic->sum('repeated');
     }
 
 
-    public static function getReadTotal($language_id)
+    public static function getReadTotal($language_id, $user_id=false)
     {
-        $statistic = self::getStatisticTotal($language_id);
+        $statistic = self::getStatisticTotal($language_id, $user_id);
         return $statistic->sum('readed');
     }
 
@@ -178,26 +185,37 @@ class Statistics extends Model
         } else {
             return false;
         }
+    }
 
 
+    public static function getStatisticByUser($user_id, $language_id)
+    {
+        $statistics  = self::where('user_id', $user_id)
+            ->where('language_id', '=', $language_id)
+            ->orderBy('date')
+            ->get();
+        return $statistics;
     }
 
 
     public static function calculateStartAndEnd($language_id)
     {
-        $countStep = 18;
+        $countStep = 17;
         $statistics = self::getStatisticTotal($language_id);
         $count = $statistics->count();
         $startGregorian = self::getNumberGregDay($statistics[0]->date);
         $endGregorian = self::getNumberGregDay($statistics[$count-1]->date);
         $difference = $endGregorian - $startGregorian;
-
         $period = intval(round($difference / $countStep));
+
         if($period < 2) {
             $period = 2;
         }
 
-        $start = date('Y-m-d', strtotime('-' . $period * ($countStep) . ' days', strtotime($statistics[$count-1]->date)));
+//        dd($statistics[0]->date);
+
+        $start = date('Y-m-d', strtotime('-' . $period * ($countStep + 1) . ' days', strtotime($statistics[$count-1]->date)));
+//        dd($start);
 //        dd($statistics[0]->date, $period, $start);
         return [
             'start' => $start,//$statistics[0]->date,

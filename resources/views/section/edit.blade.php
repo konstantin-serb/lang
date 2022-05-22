@@ -113,7 +113,7 @@
                                 {{ __('messages.main.change') }}
                             </button>
                             <a class="btn btn-outline-danger" href="
-{{--{{ route('section.delete', ['section' => $section->id]) }}--}}
+{{ route('section.delete', ['section' => $section->id]) }}
                                 ">
 {{--                                Удалить--}}
                                 {{ __('messages.main.delete') }}

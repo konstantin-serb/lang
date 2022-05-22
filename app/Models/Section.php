@@ -139,7 +139,7 @@ class Section extends Model
                 }
             }
         } else {
-            $ids = [];
+            $ids = [0 => $section->id];
         }
         return $ids;
     }
@@ -167,8 +167,11 @@ class Section extends Model
             $id = explode('/', $idTime);
             $time = explode('/', $idTime)[1];
             $section = self::where('id', $id[0])->first();
-            $section->status = $id[1];
-            array_unshift($arraySections, $section);
+            if($section) {
+                $section->status = $id[1];
+                array_unshift($arraySections, $section);
+            }
+
         }
         $sections = collect($arraySections);
         return $sections;

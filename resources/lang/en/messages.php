@@ -64,6 +64,7 @@ return [
         'add_language' => 'Add language', // 'Добавить язык'
         'lang_studies' => 'Languages studied', // 'Изучаемые языки'
         'add_lang' => 'Adding a learning language', // 'Добавление изучаемого языка'
+        'edit_lang' => 'Editing a learning language', // 'Редактирование изучаемого языка'
         'lang_name' => 'Language name', // 'Название языка'
         'add' => 'Add language', // 'Добавить'
         'cancel' => 'Cancel', // 'Отмена'
@@ -78,6 +79,14 @@ return [
         'add_sec' => 'Add section', // 'Добавить'
         'edit' => 'Edit', // 'Редактировать'
         'add_edit_phrases' => 'Add/Edit phrases', // 'Добавить/редактировать фразы'
+//        ---------------
+        'deleteSection' => 'Deleting a Section', // 'Удаление раздела'
+        'attention1' => 'This section contains :n phrases!', // В этом разделе содержится n фраз!
+        'attention2' => 'If you delete this section, all these phrases will be permanently deleted', // Если вы удалите этот раздел, все эти фразы будут удалены без возможности восстановления
+        'attention3' => 'Are you sure you want to delete the section?', // Вы уверены, что хотите удалить раздел?
+        'attention4' => 'This section does not contain any phrases', // В этом разделе не содержится ни одной фразы
+
+//        -----------------
 
         'count_cycles' => 'Count cycles', // 'К-во циклов'
         'diff_level' => 'Difficulty level', // 'Уровень сложности'
@@ -202,6 +211,20 @@ return [
         'delete_all_sentence' => 'Remove all sentences from favorites (these phrases will remain in sections)', // Удалить все предложения из избранного (эти фразы останутся в разделах)
         'here_can_clear' => 'Here you can clear your favorites with one click. The phrases will be removed from favorites, but will remain in the same sections', // Здесь вы можете очистить избранное одним кликом. Фразы будут удалены из избранного, но останутся в тех же разделах
     ],
+    'options' => [
+        'options' => 'Options', // Настройки
+        'change_password' => 'Change password', // Изменить пароль
+        'password_change' => 'Password change', // Изменение пароля
+        'old_password' => 'Old password', // Старый пароль
+        'change_name' => 'Change name', // Изменить имя
+        'name_change' => 'Name change', // Изменение имени
+        'email_change' => 'Email change', // Изменение email
+        'change_email' => 'Change email', // Изменить email
+        'attention' => 'Attention', // Внимание
+        'pass_changed' => 'Password changed!', // Пароль изменен
+        'name_changed' => 'Name changed!', // Имя изменено!
+        'email_changed' => 'Email changed!', // Email изменен!
+    ]
 ];
 
 

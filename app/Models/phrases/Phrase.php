@@ -4,6 +4,7 @@ namespace App\Models\phrases;
 
 use App\Models\Language;
 use App\Models\Section;
+use App\Models\Statistics;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -11,7 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Phrase extends Model
 {
     use HasFactory;
-    use SoftDeletes;
+//    use SoftDeletes;
 
     protected $guarded = false;
 
@@ -345,6 +346,21 @@ class Phrase extends Model
         endforeach;
         $prepare = implode(' ', $array);
         return $prepare;
+    }
+
+
+    public static function phrasesSectionDelete($id)
+    {
+        $phrases = self::getPhrasesForSection($id);
+        foreach ($phrases as $phrase) {
+            $statistics = Statistics::firstOrNew(['user_id' => auth()->id(),
+                'language_id' => $phrase->language_id,
+                'date' => date('Y-m-d', strtotime($phrase->created_at))]);
+            $statistics->created = $statistics->created - 1;
+            $statistics->save();
+
+            $phrase->delete();
+        }
     }
 
 }

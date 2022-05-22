@@ -11,17 +11,28 @@
         <hr>
 
         <h2 class="b">{{ $title }}</h2>
-        <a href="{{ route('favorite.language', ['language_id' => $language->id]) }}" class="btn btn-primary">
-{{--            Посмотреть избранное--}}
-            {{ __('messages.languages.view_fav') }}
-        </a>
 
-        <div class="mt-4">
+        <div class="mt-4 btn-group">
             <a href="{{ route('section.create.sec', ['section' => 0, 'language' => $language->id]) }}" class="btn btn-outline-secondary">
 {{--                Добавить раздел--}}
                 {{ __('messages.languages.add_sec') }}
             </a>
+
+            <a href="{{ route('language.edit', ['language' => $language->id]) }}" class="btn btn-outline-success">
+                {{--            Редактировать--}}
+                {{ __('messages.sections.edit') }}
+            </a>
+
         </div>
+
+        <div class="mt-4 btn-group">
+            <a href="{{ route('favorite.language', ['language_id' => $language->id]) }}" class="btn btn-primary">
+                {{--            Посмотреть избранное--}}
+                {{ __('messages.languages.view_fav') }}
+            </a>
+        </div>
+
+
 
         @if(!$sections->isEmpty())
             <div class="mt-3">

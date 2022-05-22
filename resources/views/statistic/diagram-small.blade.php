@@ -235,12 +235,12 @@
         <h2 class="b mb-4">{{ $title }}: {{ $language->title }}</h2>
 
         <div class="">
-            <canvas id="myChart" width="400" height="150"></canvas>
+            <canvas id="myChart" width="400" height="200"></canvas>
         </div>
 
         <div class="mt-5">
             <br>
-            <canvas id="myChart2" width="400" height="150"></canvas>
+            <canvas id="myChart2" width="400" height="200"></canvas>
         </div>
 
 

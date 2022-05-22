@@ -32,10 +32,10 @@
         <div class="mb-3">
             @if($period == 20)
                 @if(\App\Models\Time::checkCountDays($language_id, $middleDays))
-                    <a href="{{ route('statistic.diagram.time', ['language_id' => $language_id, 'period' => 100]) }}"
+                    <a href="{{ route('statistic.diagram.time', ['language_id' => $language_id, 'period' => 105]) }}"
                        class="btn btn-primary">
-{{--                        Диаграмма за 100 дней--}}
-                        @lang('messages.statistic.diagram_for_n_days', ['n' => 100])
+{{--                        Диаграмма за 105 дней--}}
+                        @lang('messages.statistic.diagram_for_n_days', ['n' => 105])
                     </a>
                 @endif
 
@@ -66,7 +66,7 @@
                     {{--                    //конец кнопки за все время--}}
                 @endif
 
-                @elseif($period == 100)
+                @elseif($period == 105)
                     <a href="{{ route('statistic.diagram.time', ['language_id' => $language_id, 'period' => 20]) }}"
                        class="btn btn-primary">
 {{--                        Диаграмма за 20 дней--}}
@@ -104,12 +104,12 @@
         <h2 class="b mb-4">{{ $title }}: {{ $language->title }}</h2>
 
         <div class="">
-            <canvas id="myChart" width="400" height="150"></canvas>
+            <canvas id="myChart" width="400" height="200"></canvas>
         </div>
 
         <div class="mt-5">
             <br>
-            <canvas id="myChart2" width="400" height="150"></canvas>
+            <canvas id="myChart2" width="400" height="200"></canvas>
         </div>
 
 

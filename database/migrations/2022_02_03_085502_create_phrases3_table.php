@@ -17,6 +17,7 @@ class CreatePhrases3Table extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('section_id')->constrained()->cascadeOnDelete();
+            $table->integer('language_id')->nullable();
             $table->string('phrase', 256);
             $table->string('translate', 256);
             $table->string('transcription', 256)->nullable();

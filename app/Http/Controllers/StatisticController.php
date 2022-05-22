@@ -230,11 +230,9 @@ class StatisticController extends Controller
     private function getArraysForDiagrams($start, $end, $language_id, $type, $daysAdd, $all)
     {
         $i = $start;
-//        dd($end);
         if($daysAdd > 1) {
             $end = date('Y-m-d', strtotime('-1 day', strtotime($end)));
         }
-//        dd($end);
         $countArray = [];
         $dateArray = [];
         $num = 0;
@@ -242,7 +240,7 @@ class StatisticController extends Controller
         while ($nextDate <= $end):
             $nextDate = date('Y-m-d', strtotime('+' . $daysAdd . ' days', strtotime($i)));
             if($num > 0 && $daysAdd > 1) $i = date('Y-m-d', strtotime('+1 day', strtotime($i)));
-//            dd($i);
+
             if($daysAdd === 1) {
                 $items = Statistics::where('user_id', auth()->id())->where('language_id', '=', $language_id)
                     ->where('date', '=', $i)->get();
@@ -255,7 +253,7 @@ class StatisticController extends Controller
             $countArray[$num] = $items->sum($type);
             $dateArray[$num] = date('d/m', strtotime($i)) .'-' .date('d/m', strtotime($nextDate));
             if($all) {
-                $dateArray[$num] = date('d.m', strtotime($i)) .'-' .date('d.m/y', strtotime($nextDate));;
+                $dateArray[$num] = date('d.m', strtotime($i)) .'-' .date('d.m/y', strtotime($nextDate));
             }
 
             if($daysAdd === 1) {

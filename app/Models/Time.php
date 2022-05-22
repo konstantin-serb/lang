@@ -36,10 +36,13 @@ class Time extends Model
     }
 
 
-    public static function getTimeToday($language_id)
+    public static function getTimeToday($language_id, $user_id=false)
     {
+        if(!$user_id) {
+            $user_id = auth()->id();
+        }
         $dateToday = date('Y-m-d', time());
-        $model = self::where('user_id', auth()->id())
+        $model = self::where('user_id', $user_id)
             ->where('language_id', '=', $language_id)
             ->where('date', '=', $dateToday)
             ->first();
@@ -101,9 +104,12 @@ class Time extends Model
     }
 
 
-    public static function getAllTimes($language_id)
+    public static function getAllTimes($language_id, $user_id=false)
     {
-        $model = self::where('user_id', auth()->id())
+        if(!$user_id) {
+            $user_id = auth()->id();
+        }
+        $model = self::where('user_id', $user_id)
             ->where('language_id', '=', $language_id)
             ->get();
         return $model;
@@ -113,6 +119,11 @@ class Time extends Model
     public static function getArraysForDiagrams($start, $end, $language_id, $daysAdd, $all)
     {
         $i = $start;
+
+        if($daysAdd > 1) {
+            $end = date('Y-m-d', strtotime('-1 day', strtotime($end)));
+        }
+
         $countArray = [];
         $dateArray = [];
         $num = 0;
@@ -120,10 +131,11 @@ class Time extends Model
         $middle = 0;
         $count = 0;
         $sumAll = 0;
-        while ($i <= $end):
+        $nextDate = date('Y-m-d', strtotime('+' . $daysAdd . ' days', strtotime($i)));
+        while ($nextDate <= $end):
             $nextDate = date('Y-m-d', strtotime('+' . $daysAdd . ' days', strtotime($i)));
             if($num > 0 && $daysAdd > 1) $i = date('Y-m-d', strtotime('+1 day', strtotime($i)));
-//            dd($i);
+
             if($daysAdd === 1) {
                 $items = Time::where('user_id', auth()->id())->where('language_id', '=', $language_id)
                     ->where('date', '=', $i)->get();
@@ -133,9 +145,13 @@ class Time extends Model
             }
 
             $countArray[$num] = round(($items->sum('time')/3600), 2);
-            $dateArray[$num] = date('dM', strtotime($i));
+            $dateArray[$num] = date('d/m', strtotime($i)) .'-' .date('d/m', strtotime($nextDate));
             if($all) {
-                $dateArray[$num] = date('d.My', strtotime($i));
+                $dateArray[$num] = date('d.m', strtotime($i)) .'-' .date('d.m/y', strtotime($nextDate));
+            }
+
+            if($daysAdd === 1) {
+                $dateArray[$num] = date('d.m', strtotime($i));
             }
 
             if($items->sum('time') > 0) {
@@ -206,6 +222,37 @@ class Time extends Model
         } else {
             return false;
         }
+    }
+
+
+    public static function getLastVisit($user_id)
+    {
+        $lastVisit = self::where('user_id', $user_id)
+            ->orderBy('last_time', 'desc')
+            ->first();
+        if($lastVisit) {
+            return $lastVisit->last_time;
+        } else {
+            $user = User::where('id', $user_id)->first();
+            return strtotime($user->created_at);
+        }
+
+    }
+
+
+    public static function allItemsTime($user_id)
+    {
+        $allItems = self::where('user_id', $user_id)
+            ->get();
+        return $allItems;
+    }
+
+
+    public static function allTimeOnSite($user_id)
+    {
+        $allItems = self::allItemsTime($user_id);
+        return $allItems->sum('time');
+
     }
 
 

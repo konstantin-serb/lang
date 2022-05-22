@@ -65,6 +65,13 @@ Route::middleware('set_locale')->group(function() {
         Route::get('/dictionary/{language_id}', [DictionaryController::class, 'index'])->name('dictionary');
 
         Route::post('/options/changeDefaultLanguage', [OptionsCotnroller::class, 'changeDefaultLanguage'])->name('options.changeLanguageDefault');
+        Route::get('/options/index', [OptionsCotnroller::class, 'index'])->name('options');
+        Route::get('/options/change-password', [OptionsCotnroller::class, 'changePassword'])->name('options.changePassword');
+        Route::put('/update-password', [OptionsCotnroller::class, 'updatePassword'])->name('password.update');
+        Route::get('/options/change-name-and-email', [OptionsCotnroller::class, 'changeNameAndEmail'])->name('name.change');
+        Route::get('/options/change-email', [OptionsCotnroller::class, 'changeEmail'])->name('email.change');
+        Route::put('/update-email', [OptionsCotnroller::class, 'updateEmail'])->name('email.update');
+        Route::put('/update-name', [OptionsCotnroller::class, 'updateName'])->name('name.update');
 
         Route::get('/search/by_word/{language_id}/{word}', [SearchController::class, 'searchByWord'])->name('search.by_word');
         Route::get('/search/by_word', [SearchController::class, 'searchPhrase'])->name('search.by_phrase');

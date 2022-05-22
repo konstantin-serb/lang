@@ -43,4 +43,10 @@ class Language extends Model
     }
 
 
+    public static function getAllByUser($user_id)
+    {
+        return self::where('user_id', $user_id)->orderBy('id', 'desc')->get();
+    }
+
+
 }

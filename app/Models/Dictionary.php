@@ -39,9 +39,12 @@ class Dictionary extends Model
     }
 
 
-    public static function getForLanguageAll($language_id)
+    public static function getForLanguageAll($language_id, $user_id=false)
     {
-        return self::where('user_id', auth()->id())
+        if(!$user_id) {
+            $user_id = auth()->id();
+        }
+        return self::where('user_id', $user_id)
             ->select(['created_at', 'id'])
             ->where('language_id', '=', $language_id)
             ->where('status', '=', 1)

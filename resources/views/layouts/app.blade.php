@@ -295,7 +295,15 @@ $flagUa = '<g fill-rule="evenodd" stroke-width="1pt">
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                     @csrf
                                 </form>
+
+                                <a class="dropdown-item" href="{{ route('options') }}" >
+{{--                                    Настройки--}}
+                                    {{ __('messages.options.options') }}
+                                </a>
+
+
                             </div>
+
                         </li>
                     @endguest
                 </ul>

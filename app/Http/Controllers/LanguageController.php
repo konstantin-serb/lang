@@ -59,7 +59,8 @@ class LanguageController extends Controller
      */
     public function edit($id)
     {
-        dd(__METHOD__);
+        $language = Language::getOne($id);
+        return view('language.edit', compact('language'));
     }
 
     /**
@@ -69,9 +70,12 @@ class LanguageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(LanguageRequest $request, $id)
     {
-        dd(__METHOD__);
+        $language = Language::getOne($id);
+        $language->title = $request->title;
+        $language->save();
+        return redirect()->route('language.show', ['language' => $id]);
     }
 
     /**
